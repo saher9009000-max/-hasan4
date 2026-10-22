@@ -1,66 +1,187 @@
-let from='ar', to='en', mode='friendly';
-const $=s=>document.querySelector(s);
-const toast=m=>{const t=$('#toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)};
+// === عناصر DOM ===
+const $ = id => document.getElementById(id);
+const dom = {
+    input: $('inputText'), output: $('outputText'), count: $('charCount'),
+    btn: $('translateBtn'), src: $('srcLang'), tgt: $('tgtLang'),
+    file: $('fileInput'), importBtn: $('importBtn'),
+    progressWrap: $('progressWrap'), progressFill: $('progressFill'), progressPct: $('progressPct')
+};
 
-function getKey(){return localStorage.getItem('openai_key')||''}
+// === قائمة لغات كثيرة (أكثر من 100 لغة) ===
+const languages = {
+    'auto': 'كشف تلقائي', 'ar': 'العربية', 'en': 'الإنجليزية', 'fr': 'الفرنسية', 'es': 'الإسبانية',
+    'de': 'الألمانية', 'it': 'الإيطالية', 'ru': 'الروسية', 'zh': 'الصينية', 'ja': 'اليابانية',
+    'ko': 'الكورية', 'pt': 'البرتغالية', 'tr': 'التركية', 'nl': 'الهولندية', 'pl': 'البولندية',
+    'sv': 'السويدية', 'da': 'الدنماركية', 'no': 'النرويجية', 'fi': 'الفنلندية', 'cs': 'التشيكية',
+    'hu': 'المجرية', 'ro': 'الرومانية', 'el': 'اليونانية', 'he': 'العبرية', 'hi': 'الهندية',
+    'ur': 'الأردية', 'fa': 'الفارسية', 'bn': 'البنغالية', 'ta': 'التاميلية', 'te': 'التيلوغوية',
+    'ml': 'المالايالامية', 'th': 'التايلاندية', 'vi': 'الفيتنامية', 'id': 'الإندونيسية',
+    'ms': 'الماليزية', 'tl': 'الفلبينية', 'uk': 'الأوكرانية', 'bg': 'البلغارية', 'hr': 'الكرواتية',
+    'sk': 'السلوفاكية', 'sl': 'السلوفينية', 'sr': 'الصربية', 'lt': 'الليتوانية', 'lv': 'اللاتفية',
+    'et': 'الإستونية', 'af': 'الأفريكانية', 'sq': 'الألبانية', 'am': 'الأمهرية', 'hy': 'الأرمنية',
+    'az': 'الأذربيجانية', 'eu': 'الباسكية', 'be': 'البيلاروسية', 'bs': 'البوسنية', 'ca': 'الكاتالونية',
+    'ceb': 'السيبيونية', 'ny': 'الشيشيوا', 'co': 'الكورسيكية', 'eo': 'الإسبرانتو', 'fy': 'الفريزية',
+    'gl': 'الغاليسية', 'ka': 'الجورجية', 'gu': 'الغوجاراتية', 'ht': 'الكريولية الهايتية', 'ha': 'الهوسا',
+    'haw': 'الهاوائية', 'hmn': 'الهمونغ', 'is': 'الأيسلندية', 'ig': 'الإيجبو', 'ga': 'الأيرلندية',
+    'jv': 'الجاوية', 'kn': 'الكانادية', 'kk': 'الكازاخية', 'km': 'الخميرية', 'rw': 'الكينيارواندا',
+    'ku': 'الكردية', 'ky': 'القرغيزية', 'lo': 'اللاوية', 'la': 'اللاتينية', 'lb': 'اللوكسمبورغية',
+    'mk': 'المقدونية', 'mg': 'الملغاشية', 'mt': 'المالطية', 'mi': 'الماورية', 'mr': 'الماراثية',
+    'mn': 'المنغولية', 'my': 'البورمية', 'ne': 'النيبالية', 'or': 'الأورية', 'ps': 'الباشتو',
+    'pa': 'البنجابية', 'sm': 'الساموية', 'gd': 'الغيلية الاسكتلندية', 'st': 'السوتو', 'sn': 'الشونا',
+    'sd': 'السندية', 'si': 'السنهالية', 'so': 'الصومالية', 'su': 'السوندانية', 'sw': 'السواحيلية',
+    'tg': 'الطاجيكية', 'tt': 'التتارية', 'tk': 'التركمانية', 'ug': 'الأويغورية', 'uz': 'الأوزبكية',
+    'cy': 'الويلزية', 'xh': 'الخوسا', 'yi': 'اليديشية', 'yo': 'اليوروبا', 'zu': 'الزولو'
+};
 
-async function aiTranslate(){
- const text=$('#inputText').value.trim();
- if(!text){toast('اكتب نصاً');return}
- const key=getKey();
- if(!key){$('#keyModal').classList.remove('hidden');toast('أدخل مفتاح OpenAI أولاً');return}
+// تعبئة القوائم المنسدلة
+function populateLanguages() {
+    for (const [code, name] of Object.entries(languages)) {
+        const opt1 = new Option(name, code);
+        const opt2 = new Option(name, code);
+        dom.src.add(opt1);
+        dom.tgt.add(opt2);
+    }
+    dom.src.value = 'auto'; // الافتراضي
+    dom.tgt.value = 'en';   // الافتراضي
+}
+populateLanguages();
 
- const btn=$('#translateBtn');
- btn.disabled=true; btn.textContent='🤖 ChatGPT يفكر...';
- $('#outputText').textContent='...';
+// === دالة الترجمة الذكية (تدعم النصوص الطويلة) ===
+async function translateText(text, from, to) {
+    // MyMemory يدعم حتى 500 حرف تقريباً لكل طلب، لذا نقسم النص
+    const chunkSize = 450;
+    const chunks = [];
+    for (let i = 0; i < text.length; i += chunkSize) {
+        chunks.push(text.substring(i, i + chunkSize));
+    }
 
- const systemPrompts={
-  friendly: `You are LinguaFlow, a professional translator. Translate from ${from} to ${to}. Keep it friendly, natural, conversational, not literal.`,
-  formal: `You are a formal professional translator. Translate from ${from} to ${to} in formal business tone, accurate.`,
-  syrian: `You are expert in Syrian dialect. If input is Syrian Arabic, translate to natural English keeping meaning. If English to Syrian, use Syrian dialect. From ${from} to ${to}.`,
-  turkish: `You translate between Arabic/English and Turkish intelligently. Detect language. Translate to ${to}. If Turkish involved, translate perfectly. From ${from} to ${to}.`
- };
+    let fullTranslation = '';
+    let completed = 0;
+    
+    // إظهار شريط التقدم
+    dom.progressWrap.hidden = false;
+    
+    for (const chunk of chunks) {
+        const src = from === 'auto' ? 'ar' : from; // إذا كان تلقائي، افترض العربية (يمكن تعديله)
+        const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(chunk)}&langpair=${src}|${to}`;
+        
+        try {
+            const res = await fetch(url);
+            const data = await res.json();
+            if (data.responseStatus === 200 && data.responseData?.translatedText) {
+                fullTranslation += data.responseData.translatedText + ' ';
+            } else {
+                fullTranslation += chunk + ' '; // في حال فشل جزء، نضع النص الأصلي
+            }
+        } catch (e) {
+            fullTranslation += chunk + ' ';
+        }
 
- try{
-  const res=await fetch('https://api.openai.com/v1/chat/completions',{
-   method:'POST',
-   headers:{'Content-Type':'application/json','Authorization':`Bearer ${key}`},
-   body: JSON.stringify({
-    model:'gpt-4o-mini',
-    messages:[
-     {role:'system',content:systemPrompts[mode]},
-     {role:'user',content:text}
-    ],
-    temperature:0.3
-   })
-  });
-  const data=await res.json();
-  if(data.error) throw new Error(data.error.message);
-  const out=data.choices[0].message.content.trim();
-  $('#outputText').textContent=out;
-  $('#badge').textContent=`🤖 ChatGPT • ${mode}`;
-  toast('✅ ترجمة ذكية تمت');
- }catch(e){
-  $('#outputText').textContent='خطأ: '+e.message+'\n\nسيتم استخدام الترجمة الاحتياطية...';
-  // fallback to MyMemory
-  try{
-   const r=await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${from}|${to}`);
-   const j=await r.json(); $('#outputText').textContent=j.responseData.translatedText;
-  }catch{}
- }finally{btn.disabled=false; btn.textContent='✦ ترجمة بذكاء ChatGPT'}
+        // تحديث شريط التقدم
+        completed++;
+        const pct = Math.round((completed / chunks.length) * 100);
+        dom.progressFill.style.width = pct + '%';
+        dom.progressPct.textContent = pct + '%';
+    }
+
+    dom.progressWrap.hidden = true;
+    return fullTranslation.trim();
 }
 
-function setMode(m){mode=m;toast('النمط: '+m); if($('#inputText').value) aiTranslate();}
+// === زر الترجمة ===
+dom.btn.addEventListener('click', async () => {
+    const text = dom.input.value.trim();
+    if (!text) return alert('اكتب نصاً أو استورد ملفاً أولاً!');
+    
+    dom.btn.disabled = true;
+    dom.btn.textContent = 'جاري الترجمة...';
+    dom.output.value = '';
 
-$('#translateBtn').onclick=aiTranslate;
-$('#swapBtn').onclick=()=>{[from,to]=[to,from];$('#fromLang').textContent=from==='ar'?'🇸🇦 عربي':'🇬🇧 English';$('#toLang').textContent=to==='en'?'🇬🇧 إنكليزي':'🇸🇦 عربي';const a=$('#inputText').value;const b=$('#outputText').textContent;$('#inputText').value=b;$('#outputText').textContent=a;}
-$('#keyBtn').onclick=()=>$('#keyModal').classList.remove('hidden');
-$('#closeKey').onclick=()=>$('#keyModal').classList.add('hidden');
-$('#saveKey').onclick=()=>{const k=$('#apiKeyInput').value.trim(); if(k){localStorage.setItem('openai_key',k);toast('تم حفظ المفتاح');$('#keyModal').classList.add('hidden')}else toast('أدخل المفتاح')};
-$('#speakBtn').onclick=()=>{const u=new SpeechSynthesisUtterance($('#outputText').textContent);u.lang=to==='en'?'en-US':'ar-SA';speechSynthesis.speak(u)};
-$('#micBtn').onclick=()=>{const SR=window.webkitSpeechRecognition||window.SpeechRecognition; if(!SR)return; const rec=new SR();rec.lang=from==='ar'?'ar-SA':'en-US';rec.start(); rec.onresult=e=>{$('#inputText').value=e.results[0][0].transcript; aiTranslate()}};
-$('#inputText').oninput=()=>$('#charCount').textContent=`${$('#inputText').value.length}/5000`;
-if(localStorage.getItem('lf_theme')==='dark')document.body.classList.add('dark');
-$('#themeBtn').onclick=()=>{document.body.classList.toggle('dark')};
+    try {
+        const translated = await translateText(text, dom.src.value, dom.tgt.value);
+        dom.output.value = translated;
+    } catch (e) {
+        alert('حدث خطأ أثناء الترجمة: ' + e.message);
+    } finally {
+        dom.btn.disabled = false;
+        dom.btn.textContent = 'ترجم الآن';
+    }
+});
 
-window.setMode=setMode;
+// === تحديث عداد الأحرف ===
+dom.input.addEventListener('input', () => {
+    dom.count.textContent = `${dom.input.value.length} حرف`;
+});
+
+// === مسح النص ===
+$('clearBtn').addEventListener('click', () => {
+    dom.input.value = ''; dom.output.value = ''; dom.count.textContent = '0 حرف';
+});
+
+// === تبديل اللغات ===
+$('swapBtn').addEventListener('click', () => {
+    if (dom.src.value === 'auto') return alert('لا يمكن تبديل الكشف التلقائي');
+    [dom.src.value, dom.tgt.value] = [dom.tgt.value, dom.src.value];
+    [dom.input.value, dom.output.value] = [dom.output.value, dom.input.value];
+});
+
+// === نسخ النص ===
+$('copyBtn').addEventListener('click', () => {
+    if (!dom.output.value) return;
+    navigator.clipboard.writeText(dom.output.value).then(() => alert('تم النسخ!'));
+});
+
+// === النطق الصوتي ===
+function speak(text, lang) {
+    if (!text) return;
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = lang === 'auto' ? 'ar-SA' : lang;
+    speechSynthesis.speak(u);
+}
+$('speakTgt').addEventListener('click', () => speak(dom.output.value, dom.tgt.value));
+
+// === برمجة زر استيراد الملفات (PDF, Word, TXT) ===
+dom.importBtn.addEventListener('click', () => dom.file.click());
+
+dom.file.addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const ext = file.name.split('.').pop().toLowerCase();
+    dom.input.value = 'جاري قراءة الملف...';
+    dom.input.disabled = true;
+
+    try {
+        if (ext === 'txt' || ext === 'srt' || ext === 'md') {
+            const text = await file.text();
+            dom.input.value = text;
+        } 
+        else if (ext === 'pdf') {
+            const arrayBuffer = await file.arrayBuffer();
+            const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+            let fullText = '';
+            for (let i = 1; i <= pdf.numPages; i++) {
+                const page = await pdf.getPage(i);
+                const content = await page.getTextContent();
+                fullText += content.items.map(item => item.str).join(' ') + '\n';
+            }
+            dom.input.value = fullText;
+        } 
+        else if (ext === 'docx') {
+            const arrayBuffer = await file.arrayBuffer();
+            const result = await mammoth.extractRawText({ arrayBuffer });
+            dom.input.value = result.value;
+        } 
+        else {
+            alert('صيغة الملف غير مدعومة. استخدم TXT أو PDF أو DOCX.');
+            dom.input.value = '';
+        }
+    } catch (error) {
+        alert('خطأ في قراءة الملف: ' + error.message);
+        dom.input.value = '';
+    } finally {
+        dom.input.disabled = false;
+        dom.count.textContent = `${dom.input.value.length} حرف`;
+    }
+});
