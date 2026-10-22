@@ -1,93 +1,179 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مترجم ذكي | AI Translator</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0a0a0a">
+  <title>ترجم | Translator Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    <!-- خلفية متدرجة -->
-    <div class="bg-gradient"></div>
+<body class="dark">
 
-    <!-- الهيدر -->
-    <header class="header">
-        <div class="logo">
-            <i class="fas fa-language"></i> مترجم <span>ذكي</span>
+  <!-- ===== Top Bar ===== -->
+  <header class="topbar glass">
+    <div class="brand"><span class="accent">🌐</span> ترجم <small>Pro</small></div>
+    <div class="topbar-actions">
+      <button id="btn-settings" class="icon-btn" title="الإعدادات">⚙️</button>
+      <button id="btn-theme" class="icon-btn" title="الوضع">🌙</button>
+    </div>
+  </header>
+
+  <!-- ===== Hero / Language Bar ===== -->
+  <section class="hero">
+    <h1>ترجمة احترافية<br><span class="accent">بذكاء اصطناعي</span></h1>
+    <p>30+ لغة · ملفات · صوت · ترجمة فورية</p>
+  </section>
+
+  <!-- ===== Language Selector ===== -->
+  <section class="lang-bar glass">
+    <button class="lang-btn" id="lang-from-btn">
+      <span class="lang-flag">🇸🇦</span>
+      <span class="lang-name" id="lang-from-name">العربية</span>
+      <span class="lang-caret">▾</span>
+    </button>
+
+    <button class="swap-btn" id="swap-btn" title="تبديل">⇄</button>
+
+    <button class="lang-btn" id="lang-to-btn">
+      <span class="lang-flag">🇬🇧</span>
+      <span class="lang-name" id="lang-to-name">English</span>
+      <span class="lang-caret">▾</span>
+    </button>
+  </section>
+
+  <!-- ===== Main Translation Panel ===== -->
+  <main class="translator">
+
+    <!-- Input Card -->
+    <div class="card input-card">
+      <div class="card-head">
+        <span class="card-label" id="input-label">النص الأصلي</span>
+        <div class="card-tools">
+          <button class="tool-btn" id="btn-import" title="استيراد ملف">📎 استيراد</button>
+          <button class="tool-btn" id="btn-mic" title="إدخال صوتي">🎤 صوت</button>
+          <button class="tool-btn" id="btn-clear" title="مسح">🗑</button>
         </div>
-        <button id="themeToggle" class="theme-btn" title="تبديل الوضع">
-            <i class="fas fa-moon"></i>
+      </div>
+      <textarea id="input-text" placeholder="اكتب النص هنا، أو استورد ملفاً، أو تحدث..."></textarea>
+      <div class="card-foot">
+        <span id="char-count">0 / 5000</span>
+        <button class="btn-ai" id="btn-translate-ai">
+          <span>🤖 ترجمة بالذكاء الاصطناعي</span>
         </button>
-    </header>
+      </div>
+    </div>
 
-    <!-- المحتوى الرئيسي -->
-    <main class="container">
-        <!-- بطاقة الترجمة -->
-        <section class="translator-card">
-            <!-- شريط اللغات -->
-            <div class="lang-bar">
-                <div class="lang-select-wrapper">
-                    <label>من</label>
-                    <select id="sourceLang"></select>
-                </div>
-                <button id="swapBtn" class="swap-btn" title="تبديل اللغات">
-                    <i class="fas fa-exchange-alt"></i>
-                </button>
-                <div class="lang-select-wrapper">
-                    <label>إلى</label>
-                    <select id="targetLang"></select>
-                </div>
-            </div>
+    <!-- Output Card -->
+    <div class="card output-card">
+      <div class="card-head">
+        <span class="card-label" id="output-label">الترجمة</span>
+        <div class="card-tools">
+          <button class="tool-btn" id="btn-speak" title="استماع">🔊 استماع</button>
+          <button class="tool-btn" id="btn-copy" title="نسخ">📋 نسخ</button>
+          <button class="tool-btn" id="btn-download" title="تنزيل">⬇️</button>
+        </div>
+      </div>
+      <div id="output-text" class="output-text">
+        <span class="placeholder">ستظهر الترجمة هنا...</span>
+      </div>
+      <div class="card-foot">
+        <span id="ai-status" class="ai-status">جاهز</span>
+        <button class="btn-basic" id="btn-translate-basic">
+          ⚡ ترجمة سريعة
+        </button>
+      </div>
+    </div>
 
-            <!-- صناديق النصوص -->
-            <div class="text-panes">
-                <div class="pane">
-                    <textarea id="inputText" placeholder="اكتب النص هنا أو استخدم الميكروفون..."></textarea>
-                    <div class="pane-footer">
-                        <span id="charCount">0 / 5000</span>
-                        <div class="actions">
-                            <button id="micBtn" class="icon-btn" title="إدخال صوتي"><i class="fas fa-microphone"></i></button>
-                            <button id="clearBtn" class="icon-btn" title="مسح"><i class="fas fa-trash"></i></button>
-                        </div>
-                    </div>
-                </div>
+  </main>
 
-                <div class="pane">
-                    <textarea id="outputText" placeholder="الترجمة ستظهر هنا..." readonly></textarea>
-                    <div class="pane-footer">
-                        <span id="statusText"></span>
-                        <div class="actions">
-                            <button id="speakBtn" class="icon-btn" title="نطق الترجمة"><i class="fas fa-volume-up"></i></button>
-                            <button id="copyBtn" class="icon-btn" title="نسخ"><i class="fas fa-copy"></i></button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <!-- ===== Voice Modal ===== -->
+  <div class="modal" id="voice-modal">
+    <div class="modal-box glass">
+      <div class="modal-head">
+        <h3>🎤 الإدخال الصوتي</h3>
+        <button class="icon-btn" id="voice-close">✕</button>
+      </div>
+      <div class="voice-visualizer">
+        <div class="pulse-ring"></div>
+        <div class="pulse-ring delay1"></div>
+        <div class="pulse-ring delay2"></div>
+        <div class="mic-icon">🎤</div>
+      </div>
+      <p id="voice-status" class="voice-status">اضغط للتحدث</p>
+      <button class="btn-ai" id="voice-record-btn">▶ ابدأ التسجيل</button>
+    </div>
+  </div>
 
-            <!-- زر الترجمة -->
-            <button id="translateBtn" class="main-btn">
-                <i class="fas fa-robot"></i> ترجم بالذكاء الاصطناعي
-            </button>
-        </section>
+  <!-- ===== File Import Modal ===== -->
+  <div class="modal" id="file-modal">
+    <div class="modal-box glass">
+      <div class="modal-head">
+        <h3>📎 استيراد ملف</h3>
+        <button class="icon-btn" id="file-close">✕</button>
+      </div>
+      <div class="drop-zone" id="drop-zone">
+        <div class="drop-icon">📂</div>
+        <p>اسحب الملف هنا أو اضغط للاختيار</p>
+        <small>TXT · SRT · VTT · DOCX · PDF · MD</small>
+        <input type="file" id="file-input" accept=".txt,.srt,.vtt,.docx,.pdf,.md" hidden>
+      </div>
+      <div id="file-preview" class="file-preview"></div>
+    </div>
+  </div>
 
-        <!-- سجل الترجمة -->
-        <section class="history-section">
-            <div class="history-header">
-                <h2><i class="fas fa-history"></i> سجل الترجمة</h2>
-                <button id="clearHistoryBtn" class="clear-history-btn">مسح السجل</button>
-            </div>
-            <div id="historyList" class="history-list">
-                <!-- سيتم إضافة العناصر هنا ديناميكياً -->
-                <p class="empty-history">لا يوجد سجل ترجمة بعد.</p>
-            </div>
-        </section>
-    </main>
+  <!-- ===== Settings Modal ===== -->
+  <div class="modal" id="settings-modal">
+    <div class="modal-box glass">
+      <div class="modal-head">
+        <h3>⚙️ إعدادات الذكاء الاصطناعي</h3>
+        <button class="icon-btn" id="settings-close">✕</button>
+      </div>
 
-    <!-- إشعارات -->
-    <div id="toast" class="toast"></div>
+      <div class="form-group">
+        <label>مزود الخدمة</label>
+        <select id="ai-provider">
+          <option value="openai">OpenAI (GPT)</option>
+          <option value="gemini">Google Gemini</option>
+          <option value="deepl">DeepL (ترجمة سريعة)</option>
+        </select>
+      </div>
 
-    <script src="script.js"></script>
+      <div class="form-group">
+        <label>مفتاح API</label>
+        <input type="password" id="ai-key" placeholder="sk-...">
+        <small>🔒 يُحفظ في متصفحك فقط (localStorage)</small>
+      </div>
+
+      <div class="form-group">
+        <label>نموذج OpenAI</label>
+        <select id="openai-model">
+          <option value="gpt-4o-mini">gpt-4o-mini (سريع ورخيص)</option>
+          <option value="gpt-4o">gpt-4o (أعلى جودة)</option>
+          <option value="gpt-3.5-turbo">gpt-3.5-turbo (اقتصادي)</option>
+        </select>
+      </div>
+
+      <button class="btn-ai" id="settings-save" style="width:100%">💾 حفظ الإعدادات</button>
+    </div>
+  </div>
+
+  <!-- ===== Language Picker Modal ===== -->
+  <div class="modal" id="lang-modal">
+    <div class="modal-box glass lang-modal-box">
+      <div class="modal-head">
+        <h3 id="lang-modal-title">اختر اللغة</h3>
+        <button class="icon-btn" id="lang-close">✕</button>
+      </div>
+      <input type="text" id="lang-search" placeholder="🔍 بحث..." class="lang-search">
+      <div class="lang-list" id="lang-list"></div>
+    </div>
+  </div>
+
+  <!-- ===== Toast ===== -->
+  <div id="toast" class="toast"></div>
+
+  <script src="app.js"></script>
 </body>
 </html>
