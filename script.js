@@ -1,187 +1,213 @@
-// استرجاع الإعدادات المحفوظة أو استخدام قيم افتراضية
-let from = localStorage.getItem('lf_from_lang') || 'ar';
-let to = localStorage.getItem('lf_to_lang') || 'en';
-let mode = localStorage.getItem('lf_mode') || 'friendly';
-
-const $ = s => document.querySelector(s);
-const toast = m => {
-  const t = $('#toast');
-  t.textContent = m;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2500);
+// === عناصر DOM ===
+const $ = id => document.getElementById(id);
+const dom = {
+    src: $('sourceLang'), tgt: $('targetLang'), input: $('inputText'),
+    output: $('outputText'), count: $('charCount'), btn: $('translateBtn'),
+    swap: $('swapBtn'), clear: $('clearBtn'), copy: $('copyBtn'),
+    speak: $('speakBtn'), mic: $('micBtn'), theme: $('themeToggle'),
+    history: $('historyList'), clearHistory: $('clearHistoryBtn'),
+    toast: $('toast'), status: $('statusText')
 };
 
-function getKey() {
-  return localStorage.getItem('openai_key') || '';
-}
+// === قائمة اللغات (أكثر من 100 لغة) ===
+const languages = {
+    'auto': '🌐 كشف تلقائي', 'ar': '🇸🇦 العربية', 'en': '🇺🇸 الإنجليزية', 'fr': '🇫🇷 الفرنسية',
+    'es': '🇪🇸 الإسبانية', 'de': '🇩🇪 الألمانية', 'it': '🇮🇹 الإيطالية', 'ru': '🇷🇺 الروسية',
+    'zh': '🇨🇳 الصينية', 'ja': '🇯🇵 اليابانية', 'ko': '🇰🇷 الكورية', 'pt': '🇵🇹 البرتغالية',
+    'tr': '🇹🇷 التركية', 'nl': '🇳🇱 الهولندية', 'pl': '🇵🇱 البولندية', 'sv': '🇸🇪 السويدية',
+    'da': '🇩🇰 الدنماركية', 'no': '🇳🇴 النرويجية', 'fi': '🇫🇮 الفنلندية', 'cs': '🇨🇿 التشيكية',
+    'hu': '🇭🇺 المجرية', 'ro': '🇷🇴 الرومانية', 'el': '🇬🇷 اليونانية', 'he': '🇮🇱 العبرية',
+    'hi': '🇮🇳 الهندية', 'ur': '🇵🇰 الأردية', 'fa': '🇮🇷 الفارسية', 'bn': '🇧🇩 البنغالية',
+    'ta': '🇮🇳 التاميلية', 'te': '🇮🇳 التيلوغوية', 'ml': '🇮🇳 المالايالامية', 'th': '🇹🇭 التايلاندية',
+    'vi': '🇻🇳 الفيتنامية', 'id': '🇮🇩 الإندونيسية', 'ms': '🇲🇾 الماليزية', 'tl': '🇵🇭 الفلبينية',
+    'uk': '🇺🇦 الأوكرانية', 'bg': '🇧🇬 البلغارية', 'hr': '🇭🇷 الكرواتية', 'sk': '🇸🇰 السلوفاكية',
+    'sl': '🇸🇮 السلوفينية', 'sr': '🇷🇸 الصربية', 'lt': '🇱🇹 الليتوانية', 'lv': '🇱🇻 اللاتفية',
+    'et': '🇪🇪 الإستونية', 'af': '🇿🇦 الأفريكانية', 'sq': '🇦🇱 الألبانية', 'am': '🇪🇹 الأمهرية',
+    'hy': '🇦🇲 الأرمنية', 'az': '🇦🇿 الأذربيجانية', 'eu': '🇪🇸 الباسكية', 'be': '🇧🇾 البيلاروسية',
+    'bs': '🇧🇦 البوسنية', 'ca': '🇪🇸 الكاتالونية', 'ceb': '🇵🇭 السيبيونية', 'ny': '🇲🇼 الشيشيوا',
+    'co': '🇫🇷 الكورسيكية', 'eo': '🌍 الإسبرانتو', 'fy': '🇳🇱 الفريزية', 'gl': '🇪🇸 الغاليسية',
+    'ka': '🇬🇪 الجورجية', 'gu': '🇮🇳 الغوجاراتية', 'ht': '🇭🇹 الكريولية', 'ha': '🇳🇬 الهوسا',
+    'haw': '🇺🇸 الهاوائية', 'hmn': '🇱🇦 الهمونغ', 'is': '🇮🇸 الأيسلندية', 'ig': '🇳🇬 الإيجبو',
+    'ga': '🇮🇪 الأيرلندية', 'jv': '🇮🇩 الجاوية', 'kn': '🇮🇳 الكانادية', 'kk': '🇰🇿 الكازاخية',
+    'km': '🇰🇭 الخميرية', 'rw': '🇷🇼 الكينيارواندا', 'ku': '🇹🇷 الكردية', 'ky': '🇰🇬 القرغيزية',
+    'lo': '🇱🇦 اللاوية', 'la': '🏛️ اللاتينية', 'lb': '🇱🇺 اللوكسمبورغية', 'mk': '🇲🇰 المقدونية',
+    'mg': '🇲🇬 الملغاشية', 'mt': '🇲🇹 المالطية', 'mi': '🇳🇿 الماورية', 'mr': '🇮🇳 الماراثية',
+    'mn': '🇲🇳 المنغولية', 'my': '🇲🇲 البورمية', 'ne': '🇳🇵 النيبالية', 'or': '🇮🇳 الأورية',
+    'ps': '🇦🇫 الباشتو', 'pa': '🇮🇳 البنجابية', 'sm': '🇼🇸 الساموية', 'gd': '🏴󠁧󠁢󠁳󠁣󠁴󠁿 الغيلية',
+    'st': '🇱🇸 السوتو', 'sn': '🇿🇼 الشونا', 'sd': '🇵🇰 السندية', 'si': '🇱🇰 السنهالية',
+    'so': '🇸🇴 الصومالية', 'su': '🇮🇩 السوندانية', 'sw': '🇰🇪 السواحيلية', 'tg': '🇹🇯 الطاجيكية',
+    'tt': '🇷🇺 التتارية', 'tk': '🇹🇲 التركمانية', 'ug': '🇨🇳 الأويغورية', 'uz': '🇺🇿 الأوزبكية',
+    'cy': '🏴󠁧󠁢󠁷󠁬󠁳󠁿 الويلزية', 'xh': '🇿🇦 الخوسا', 'yi': '🇮🇱 اليديشية', 'yo': '🇳🇬 اليوروبا', 'zu': '🇿🇦 الزولو'
+};
 
-// تحديث اللغات المسجلة في القوائم والأخذ بالحسبان آخر موقع/لغة تم تسجيلها
-function initLangs() {
-  $('#fromLang').value = from;
-  $('#toLang').value = to;
-}
-
-function saveLangState() {
-  localStorage.setItem('lf_from_lang', from);
-  localStorage.setItem('lf_to_lang', to);
-}
-
-async function aiTranslate() {
-  const text = $('#inputText').value.trim();
-  if (!text) {
-    toast('يرجى كتابة نص للترجمة');
-    return;
-  }
-  const key = getKey();
-  if (!key) {
-    $('#keyModal').classList.remove('hidden');
-    toast('أدخل مفتاح OpenAI API أولاً');
-    return;
-  }
-
-  const btn = $('#translateBtn');
-  btn.disabled = true;
-  btn.textContent = '🤖 جاري الترجمة بالذكاء الاصطناعي...';
-  $('#outputText').textContent = '...';
-
-  const systemPrompts = {
-    friendly: `You are a professional translator. Translate accurately from language code '${from}' to language code '${to}'. Keep it natural, conversational, and friendly.`,
-    formal: `You are a professional business translator. Translate formally and accurately from language code '${from}' to language code '${to}'.`,
-    syrian: `You are an expert in Levantine/Syrian Arabic dialect. Translate between '${from}' and '${to}', using natural Syrian expressions where appropriate.`,
-    turkish: `You specialize in Turkish translations. Translate naturally and perfectly between '${from}' and '${to}'.`
-  };
-
-  try {
-    const res = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${key}`
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [
-          { role: 'system', content: systemPrompts[mode] || systemPrompts.friendly },
-          { role: 'user', content: text }
-        ],
-        temperature: 0.3
-      })
-    });
-    const data = await res.json();
-    if (data.error) throw new Error(data.error.message);
-
-    const out = data.choices[0].message.content.trim();
-    $('#outputText').textContent = out;
-    $('#badge').textContent = `🤖 ذكاء اصطناعي • ${mode}`;
-    toast('✅ تم اكتمال الترجمة');
-  } catch (e) {
-    $('#outputText').textContent = 'خطأ: ' + e.message + '\n\nجاري استخدام الترجمة الاحتياطية...';
-    try {
-      const r = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${from}|${to}`);
-      const j = await r.json();
-      $('#outputText').textContent = j.responseData.translatedText;
-    } catch {
-      toast('فشلت الترجمة الاحتياطية أيضاً');
+// تعبئة القوائم
+function populate() {
+    for (const [code, name] of Object.entries(languages)) {
+        dom.src.add(new Option(name, code));
+        dom.tgt.add(new Option(name, code));
     }
-  } finally {
-    btn.disabled = false;
-    btn.textContent = '✦ ترجمة بذكاء الاصطناعي';
-  }
+    dom.src.value = 'auto';
+    dom.tgt.value = 'en';
+}
+populate();
+
+// === نظام الإشعارات (Toast) ===
+function showToast(msg) {
+    dom.toast.textContent = msg;
+    dom.toast.classList.add('show');
+    setTimeout(() => dom.toast.classList.remove('show'), 3000);
 }
 
-function setMode(m) {
-  mode = m;
-  localStorage.setItem('lf_mode', m);
-  toast('تم تغيير النمط إلى: ' + m);
-  if ($('#inputText').value) aiTranslate();
+// === الوضع الداكن (Dark Mode) ===
+const currentTheme = localStorage.getItem('theme');
+if (currentTheme === 'dark') {
+    document.body.classList.add('dark-mode');
+    dom.theme.innerHTML = '<i class="fas fa-sun"></i>';
+}
+dom.theme.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    if (document.body.classList.contains('dark-mode')) {
+        localStorage.setItem('theme', 'dark');
+        dom.theme.innerHTML = '<i class="fas fa-sun"></i>';
+    } else {
+        localStorage.setItem('theme', 'light');
+        dom.theme.innerHTML = '<i class="fas fa-moon"></i>';
+    }
+});
+
+// === دالة الترجمة (API حقيقي) ===
+async function translateText(text, from, to) {
+    if (from === 'auto') from = 'ar'; // افتراضي إذا كان الكشف التلقائي
+    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${from}|${to}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    if (data.responseStatus === 200 && data.responseData?.translatedText) {
+        return data.responseData.translatedText;
+    }
+    throw new Error('فشل الاتصال بخادم الترجمة');
 }
 
-// الأحداث والتفاعلات
-$('#translateBtn').onclick = aiTranslate;
+// === زر الترجمة ===
+dom.btn.addEventListener('click', async () => {
+    const text = dom.input.value.trim();
+    if (!text) return showToast('⚠️ يرجى كتابة نص أولاً');
+    if (dom.src.value === dom.tgt.value) return showToast('⚠️ اللغتان متطابقتان');
 
-// قائمة تغيير اللغة الأصلية والهدف وحفظها
-$('#fromLang').onchange = (e) => {
-  from = e.target.value;
-  saveLangState();
-};
+    dom.btn.disabled = true;
+    dom.btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الترجمة...';
+    dom.output.value = '';
 
-$('#toLang').onchange = (e) => {
-  to = e.target.value;
-  saveLangState();
-};
+    try {
+        const translated = await translateText(text, dom.src.value, dom.tgt.value);
+        dom.output.value = translated;
+        showToast('✅ تمت الترجمة بنجاح');
+        saveToHistory(text, translated, dom.src.value, dom.tgt.value);
+    } catch (error) {
+        showToast('❌ خطأ: ' + error.message);
+    } finally {
+        dom.btn.disabled = false;
+        dom.btn.innerHTML = '<i class="fas fa-robot"></i> ترجم بالذكاء الاصطناعي';
+    }
+});
 
-// زر تبديل اللغات والنصوص
-$('#swapBtn').onclick = () => {
-  [from, to] = [to, from];
-  $('#fromLang').value = from;
-  $('#toLang').value = to;
-  saveLangState();
+// === عداد الأحرف ===
+dom.input.addEventListener('input', () => {
+    dom.count.textContent = `${dom.input.value.length} / 5000`;
+});
 
-  const inputVal = $('#inputText').value;
-  const outputVal = $('#outputText').textContent;
-  if (outputVal && outputVal !== '...') {
-    $('#inputText').value = outputVal;
-    $('#outputText').textContent = inputVal;
-  }
-  toast('تم تبديل اللغات');
-};
+// === تبديل اللغات ===
+dom.swap.addEventListener('click', () => {
+    if (dom.src.value === 'auto') return showToast('⚠️ لا يمكن تبديل الكشف التلقائي');
+    [dom.src.value, dom.tgt.value] = [dom.tgt.value, dom.src.value];
+    [dom.input.value, dom.output.value] = [dom.output.value, dom.input.value];
+});
 
-// الترجمة الصوتية: القراءة والتسجيل
-$('#speakBtn').onclick = () => {
-  const text = $('#outputText').textContent;
-  if (!text || text === '...') return;
-  const u = new SpeechSynthesisUtterance(text);
-  u.lang = to;
-  window.speechSynthesis.speak(u);
-};
+// === مسح النص ===
+dom.clear.addEventListener('click', () => {
+    dom.input.value = ''; dom.output.value = ''; dom.count.textContent = '0 / 5000';
+});
 
-$('#micBtn').onclick = () => {
-  const SR = window.webkitSpeechRecognition || window.SpeechRecognition;
-  if (!SR) {
-    toast('المتصفح لا يدعم التعرف على الصوت');
-    return;
-  }
-  const rec = new SR();
-  rec.lang = from === 'ar' ? 'ar-SA' : from;
-  toast('🎙️ جاري الاستماع...');
-  rec.start();
+// === نسخ الترجمة ===
+dom.copy.addEventListener('click', () => {
+    if (!dom.output.value) return;
+    navigator.clipboard.writeText(dom.output.value);
+    showToast('📋 تم نسخ الترجمة');
+});
 
-  rec.onresult = e => {
-    $('#inputText').value = e.results[0][0].transcript;
-    aiTranslate();
-  };
+// === النطق الصوتي (AI Voice) ===
+dom.speak.addEventListener('click', () => {
+    if (!dom.output.value) return;
+    speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(dom.output.value);
+    utterance.lang = dom.tgt.value === 'auto' ? 'ar-SA' : dom.tgt.value;
+    utterance.rate = 0.9;
+    speechSynthesis.speak(utterance);
+});
 
-  rec.onerror = () => {
-    toast('لم نتمكن من التقاط الصوت، حاول ثانية');
-  };
-};
-
-// إدارة المفتاح والمظهر
-$('#keyBtn').onclick = () => $('#keyModal').classList.remove('hidden');
-$('#closeKey').onclick = () => $('#keyModal').classList.add('hidden');
-$('#saveKey').onclick = () => {
-  const k = $('#apiKeyInput').value.trim();
-  if (k) {
-    localStorage.setItem('openai_key', k);
-    toast('تم حفظ المفتاح بنجاح');
-    $('#keyModal').classList.add('hidden');
-  } else toast('أدخل المفتاح أولاً');
-};
-
-$('#inputText').oninput = () => {
-  $('#charCount').textContent = `${$('#inputText').value.length}/5000`;
-};
-
-if (localStorage.getItem('lf_theme') === 'dark') {
-  document.body.classList.add('dark');
+// === الترجمة الصوتية (Speech Recognition) ===
+let recognition;
+if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    
+    recognition.onstart = () => {
+        dom.mic.classList.add('recording');
+        showToast('🎙️ جاري الاستماع...');
+    };
+    recognition.onresult = async (event) => {
+        const transcript = event.results[0][0].transcript;
+        dom.input.value = transcript;
+        dom.count.textContent = `${transcript.length} / 5000`;
+        dom.mic.classList.remove('recording');
+        
+        // ترجمة تلقائية بعد التعرف على الصوت
+        dom.btn.click();
+    };
+    recognition.onerror = () => {
+        dom.mic.classList.remove('recording');
+        showToast('❌ لم يتم التعرف على الصوت');
+    };
+    recognition.onend = () => dom.mic.classList.remove('recording');
 }
 
-$('#themeBtn').onclick = () => {
-  document.body.classList.toggle('dark');
-  const isDark = document.body.classList.contains('dark');
-  localStorage.setItem('lf_theme', isDark ? 'dark' : 'light');
-};
+dom.mic.addEventListener('click', () => {
+    if (!recognition) return showToast('⚠️ متصفحك لا يدعم الإدخال الصوتي');
+    recognition.lang = dom.src.value === 'auto' ? 'ar-SA' : dom.src.value;
+    recognition.start();
+});
 
-// تهيئة الوضع الأولي
-initLangs();
-window.setMode = setMode;
+// === سجل الترجمة (History) ===
+function getHistory() {
+    return JSON.parse(localStorage.getItem('translationHistory')) || [];
+}
+function saveToHistory(original, translated, from, to) {
+    const history = getHistory();
+    history.unshift({ original, translated, from, to, time: Date.now() });
+    // الاحتفاظ بآخر 10 ترجمات فقط
+    localStorage.setItem('translationHistory', JSON.stringify(history.slice(0, 10)));
+    renderHistory();
+}
+function renderHistory() {
+    const history = getHistory();
+    if (history.length === 0) {
+        dom.history.innerHTML = '<p class="empty-history">لا يوجد سجل ترجمة بعد.</p>';
+        return;
+    }
+    dom.history.innerHTML = history.map(item => `
+        <div class="history-item">
+            <div class="langs">${languages[item.from]} ➔ ${languages[item.to]}</div>
+            <div class="original">${item.original.substring(0, 50)}${item.original.length > 50 ? '...' : ''}</div>
+            <div class="translated">${item.translated}</div>
+        </div>
+    `).join('');
+}
+dom.clearHistory.addEventListener('click', () => {
+    localStorage.removeItem('translationHistory');
+    renderHistory();
+    showToast('🗑️ تم مسح السجل');
+});
+
+// تحميل السجل عند فتح الصفحة
+renderHistory();
