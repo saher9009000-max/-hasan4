@@ -1,128 +1,53 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#0a0a0a">
-  <title>نغم ♪</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LinguaFlow AI</title>
+<link rel="stylesheet" href="style.css">
 </head>
-<body class="dark">
+<body>
+<div class="bg-blobs"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+<header><div class="logo"><span class="smile">☺</span> linguaflow AI</div>
+<div class="header-actions">
+<button class="icon-btn" id="keyBtn" title="API Key">🔑</button>
+<button class="icon-btn" id="themeBtn">🌙</button>
+</div></header>
+<main>
+<h1 id="mainTitle">مترجم ذكي بـ ChatGPT</h1>
+<p class="subtitle">يفهم العامية، الرسمية، والسياق - ترجمة احترافية</p>
+<div class="lang-switcher">
+<button class="lang" id="fromLang">🇸🇦 عربي</button>
+<button class="swap" id="swapBtn">⇅</button>
+<button class="lang" id="toLang">🇬🇧 إنكليزي</button>
+</div>
+<div class="grid">
+<div class="card"><div class="card-top"><span id="fromLabel">عربي</span><button class="mini" id="micBtn">🎤</button></div>
+<textarea id="inputText" dir="rtl" placeholder="اكتب مثلاً: شلونك؟ بدي روح يالوفا بكرا">مرحبا، كيف حالك اليوم؟</textarea>
+<div class="card-bottom"><span id="charCount">24/5000</span></div></div>
+<div class="card"><div class="card-top"><span id="toLabel">English</span><button class="mini" id="speakBtn">🔊</button></div>
+<div id="outputText" class="output">Hello, how are you today?</div>
+<div id="badge" class="badge">🤖 AI - Friendly</div></div>
+</div>
+<div class="cta-wrap">
+<button id="translateBtn" class="primary">✦ ترجمة بذكاء ChatGPT</button>
+<div class="secondary">
+<button class="sec" onclick="setMode('friendly')">😊 عامي</button>
+<button class="sec" onclick="setMode('formal')">💼 رسمي</button>
+<button class="sec" onclick="setMode('syrian')">🇸🇾 سوري</button>
+<button class="sec" onclick="setMode('turkish')">🇹🇷 تركي</button>
+</div>
+</div>
+</main>
 
-  <header class="topbar glass">
-    <button id="menu-btn" class="icon-btn">☰</button>
-    <div class="brand"><span class="gold">♪</span> نغم</div>
-    <button id="theme-btn" class="icon-btn">🌙</button>
-  </header>
-
-  <aside class="drawer" id="drawer">
-    <div class="drawer-head">
-      <span class="brand"><span class="gold">♪</span> نغم</span>
-      <button id="close-drawer" class="icon-btn">✕</button>
-    </div>
-    <nav class="drawer-nav">
-      <a href="#home">🏠 الرئيسية</a>
-      <a href="#tracks">🎵 المقطوعات</a>
-      <a href="#about">👤 عن الفنان</a>
-      <a href="#contact">📞 تواصل</a>
-    </nav>
-  </aside>
-  <div class="overlay" id="overlay"></div>
-
-  <section id="home" class="hero">
-    <canvas id="hero-canvas"></canvas>
-    <div class="hero-inner">
-      <h1>تجربة موسيقية<br><span class="gold">غامرة</span></h1>
-      <p>ثلاث مقطوعات أصلية في رحلة واحدة</p>
-      <button class="btn-primary" id="hero-play">▶ ابدأ الاستماع</button>
-    </div>
-  </section>
-
-  <section id="tracks" class="section">
-    <h2 class="section-title">المقطوعات</h2>
-
-    <article class="track-card" data-track="0">
-      <div class="card-cover"><span class="card-num">01</span></div>
-      <div class="card-info"><h3>البداية</h3><p>2:45 · هادئ</p></div>
-      <button class="card-play" data-track="0">▶</button>
-    </article>
-
-    <article class="track-card" data-track="1">
-      <div class="card-cover"><span class="card-num">02</span></div>
-      <div class="card-info"><h3>الذروة</h3><p>3:30 · ملحمي</p></div>
-      <button class="card-play" data-track="1">▶</button>
-    </article>
-
-    <article class="track-card" data-track="2">
-      <div class="card-cover"><span class="card-num">03</span></div>
-      <div class="card-info"><h3>الختام</h3><p>4:15 · تأملي</p></div>
-      <button class="card-play" data-track="2">▶</button>
-    </article>
-  </section>
-
-  <section id="about" class="section about">
-    <div class="avatar">🎼</div>
-    <h2 class="section-title">عن الفنان</h2>
-    <p>مؤلف موسيقي ومهندس صوت، يجمع بين الأصالة والحداثة. هذه المقطوعات الثلاث تمثل رحلة متكاملة عبر المشاعر الإنسانية.</p>
-  </section>
-
-  <footer id="contact" class="footer">
-    <div class="socials">
-      <a href="#">🎧</a><a href="#">📺</a><a href="#">📷</a><a href="#">🐦</a>
-    </div>
-    <p>© 2025 نغم</p>
-  </footer>
-
-  <div class="mini-player" id="mini-player">
-    <div class="mini-thumb">♪</div>
-    <div class="mini-info">
-      <strong id="mini-title">البداية</strong>
-      <span id="mini-artist">نغم</span>
-    </div>
-    <button id="mini-play" class="icon-btn play-btn">▶</button>
-    <button id="mini-expand" class="icon-btn">⌃</button>
-    <div class="mini-progress"><div id="mini-progress-fill"></div></div>
-  </div>
-
-  <div class="full-player" id="full-player">
-    <div class="fp-head">
-      <button id="fp-close" class="icon-btn">⌄</button>
-      <span>قيد التشغيل</span>
-      <button id="fp-shuffle" class="icon-btn">🔀</button>
-    </div>
-    <div class="fp-cover"><div class="fp-art">♪</div></div>
-    <div class="fp-meta">
-      <h2 id="fp-title">البداية</h2>
-      <p id="fp-artist">نغم</p>
-    </div>
-    <div class="fp-progress-wrap">
-      <div class="fp-progress" id="fp-progress">
-        <div class="fp-progress-fill" id="fp-progress-fill"></div>
-      </div>
-      <div class="fp-times">
-        <span id="fp-current">0:00</span>
-        <span id="fp-duration">0:00</span>
-      </div>
-    </div>
-    <div class="fp-controls">
-      <button id="fp-prev" class="icon-btn big">⏮</button>
-      <button id="fp-play" class="icon-btn play-btn xl">▶</button>
-      <button id="fp-next" class="icon-btn big">⏭</button>
-    </div>
-    <div class="fp-extra">
-      <button id="fp-repeat" class="icon-btn">🔁</button>
-      <div class="fp-volume">
-        <span id="fp-mute">🔊</span>
-        <input type="range" id="fp-vol" min="0" max="1" step="0.01" value="0.8">
-      </div>
-    </div>
-  </div>
-
-  <div id="toast" class="toast"></div>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"></script>
-  <script src="app.js"></script>
+<div id="keyModal" class="modal hidden"><div class="modal-content" style="text-align:left;direction:ltr">
+<h3>🔑 OpenAI API Key</h3>
+<p style="font-size:13px;margin:8px 0">احصل على مفتاح مجاني من: <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com/api-keys</a></p>
+<input id="apiKeyInput" type="password" placeholder="sk-..." style="width:100%;padding:12px;border-radius:12px;border:1px solid #ddd;margin:10px 0">
+<button id="saveKey" class="primary" style="width:100%">حفظ</button>
+<p style="font-size:11px;margin-top:8px;color:#888">المفتاح يُحفظ فقط في جهازك (localStorage) ولا يُرسل لنا</p>
+<button id="closeKey" class="sec" style="margin-top:10px">إغلاق</button>
+</div></div>
+<div id="toast"></div>
+<script src="script.js"></script>
 </body>
 </html>
