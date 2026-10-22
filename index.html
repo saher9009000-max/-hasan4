@@ -1,53 +1,82 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>LinguaFlow AI</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ترجمة | Translate Pro</title>
 <link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<!-- مكتبات لقراءة الملفات (PDF و Word) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
 <body>
-<div class="bg-blobs"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
-<header><div class="logo"><span class="smile">☺</span> linguaflow AI</div>
-<div class="header-actions">
-<button class="icon-btn" id="keyBtn" title="API Key">🔑</button>
-<button class="icon-btn" id="themeBtn">🌙</button>
-</div></header>
-<main>
-<h1 id="mainTitle">مترجم ذكي بـ ChatGPT</h1>
-<p class="subtitle">يفهم العامية، الرسمية، والسياق - ترجمة احترافية</p>
-<div class="lang-switcher">
-<button class="lang" id="fromLang">🇸🇦 عربي</button>
-<button class="swap" id="swapBtn">⇅</button>
-<button class="lang" id="toLang">🇬🇧 إنكليزي</button>
-</div>
-<div class="grid">
-<div class="card"><div class="card-top"><span id="fromLabel">عربي</span><button class="mini" id="micBtn">🎤</button></div>
-<textarea id="inputText" dir="rtl" placeholder="اكتب مثلاً: شلونك؟ بدي روح يالوفا بكرا">مرحبا، كيف حالك اليوم؟</textarea>
-<div class="card-bottom"><span id="charCount">24/5000</span></div></div>
-<div class="card"><div class="card-top"><span id="toLabel">English</span><button class="mini" id="speakBtn">🔊</button></div>
-<div id="outputText" class="output">Hello, how are you today?</div>
-<div id="badge" class="badge">🤖 AI - Friendly</div></div>
-</div>
-<div class="cta-wrap">
-<button id="translateBtn" class="primary">✦ ترجمة بذكاء ChatGPT</button>
-<div class="secondary">
-<button class="sec" onclick="setMode('friendly')">😊 عامي</button>
-<button class="sec" onclick="setMode('formal')">💼 رسمي</button>
-<button class="sec" onclick="setMode('syrian')">🇸🇾 سوري</button>
-<button class="sec" onclick="setMode('turkish')">🇹🇷 تركي</button>
-</div>
-</div>
-</main>
+  <div class="bg-glow"></div>
 
-<div id="keyModal" class="modal hidden"><div class="modal-content" style="text-align:left;direction:ltr">
-<h3>🔑 OpenAI API Key</h3>
-<p style="font-size:13px;margin:8px 0">احصل على مفتاح مجاني من: <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com/api-keys</a></p>
-<input id="apiKeyInput" type="password" placeholder="sk-..." style="width:100%;padding:12px;border-radius:12px;border:1px solid #ddd;margin:10px 0">
-<button id="saveKey" class="primary" style="width:100%">حفظ</button>
-<p style="font-size:11px;margin-top:8px;color:#888">المفتاح يُحفظ فقط في جهازك (localStorage) ولا يُرسل لنا</p>
-<button id="closeKey" class="sec" style="margin-top:10px">إغلاق</button>
-</div></div>
-<div id="toast"></div>
-<script src="script.js"></script>
+  <header class="header">
+    <div class="header-top">
+      <h1 class="logo">🌐 ترجمة احترافية</h1>
+    </div>
+    <p class="tagline">ترجم نصوصك وملفاتك بين أكثر من 100 لغة</p>
+  </header>
+
+  <main class="container">
+    <section class="card">
+
+      <!-- شريط اللغات -->
+      <div class="lang-bar">
+        <div class="lang-group">
+          <label>من</label>
+          <select id="srcLang" class="lang-select"></select>
+        </div>
+        <button id="swapBtn" class="swap-btn" title="تبديل اللغات">⇄</button>
+        <div class="lang-group">
+          <label>إلى</label>
+          <select id="tgtLang" class="lang-select"></select>
+        </div>
+      </div>
+
+      <!-- صناديق النص -->
+      <div class="panes">
+        <div class="pane">
+          <textarea id="inputText" placeholder="اكتب النص هنا أو استورد ملفاً..."></textarea>
+          <div class="pane-actions">
+            <!-- زر استيراد الملفات -->
+            <input type="file" id="fileInput" accept=".txt,.docx,.pdf,.srt,.md" hidden>
+            <button id="importBtn" class="import-btn" style="background:#8b5cf6; color:white; border-radius:8px; padding:8px 12px; cursor:pointer; border:none;">📁 استيراد ملف</button>
+            <span id="charCount" class="char-count">0 / 5000</span>
+            <button id="clearBtn" class="icon-btn" title="مسح">🗑️</button>
+          </div>
+        </div>
+
+        <div class="pane">
+          <textarea id="outputText" placeholder="الترجمة..." readonly></textarea>
+          <div class="pane-actions">
+            <button id="speakTgt" class="icon-btn" title="نطق الترجمة">🔊</button>
+            <button id="copyBtn" class="icon-btn" title="نسخ">📋</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- شريط التقدم -->
+      <div id="progressWrap" class="progress-wrap" hidden>
+        <div class="progress-info">
+          <span id="progressLabel">جارٍ الترجمة...</span>
+          <span id="progressPct">0%</span>
+        </div>
+        <div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+      </div>
+
+      <!-- أزرار الترجمة -->
+      <div class="action-row">
+        <button id="translateBtn" class="main-btn">ترجم الآن</button>
+      </div>
+
+    </section>
+  </main>
+
+  <footer class="footer">صُنع بـ ❤️ — ترجمة فورية نصاً وملفات</footer>
+
+  <script src="script.js"></script>
 </body>
 </html>
