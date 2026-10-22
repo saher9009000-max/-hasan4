@@ -1,113 +1,93 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ترجمة - LinguaFlow AI</title>
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مترجم ذكي | AI Translator</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-<div class="bg-blobs">
-  <div class="blob b1"></div>
-  <div class="blob b2"></div>
-  <div class="blob b3"></div>
-</div>
+    <!-- خلفية متدرجة -->
+    <div class="bg-gradient"></div>
 
-<header>
-  <div class="logo">
-    <span class="smile">☺</span>
-    <span>ترجمة LinguaFlow</span>
-  </div>
-  <div class="header-actions">
-    <button class="icon-btn" id="keyBtn" title="مفتاح API">🔑</button>
-    <button class="icon-btn" id="themeBtn">🌙</button>
-  </div>
-</header>
+    <!-- الهيدر -->
+    <header class="header">
+        <div class="logo">
+            <i class="fas fa-language"></i> مترجم <span>ذكي</span>
+        </div>
+        <button id="themeToggle" class="theme-btn" title="تبديل الوضع">
+            <i class="fas fa-moon"></i>
+        </button>
+    </header>
 
-<main>
-  <!-- كلمة ترجمة بأعلى الموقع -->
-  <h1 id="mainTitle">ترجمة بذكاء الاصطناعي</h1>
-  <p class="subtitle">ترجمة صوتية وذكية تفهم السياق والعامية بفضل ChatGPT</p>
+    <!-- المحتوى الرئيسي -->
+    <main class="container">
+        <!-- بطاقة الترجمة -->
+        <section class="translator-card">
+            <!-- شريط اللغات -->
+            <div class="lang-bar">
+                <div class="lang-select-wrapper">
+                    <label>من</label>
+                    <select id="sourceLang"></select>
+                </div>
+                <button id="swapBtn" class="swap-btn" title="تبديل اللغات">
+                    <i class="fas fa-exchange-alt"></i>
+                </button>
+                <div class="lang-select-wrapper">
+                    <label>إلى</label>
+                    <select id="targetLang"></select>
+                </div>
+            </div>
 
-  <!-- شريط اختيار وتبديل اللغات -->
-  <div class="lang-switcher">
-    <select id="fromLang" class="lang-select">
-      <option value="ar">🇸🇦 العربية</option>
-      <option value="en">🇬🇧 الإنجليزية</option>
-      <option value="tr">🇹🇷 التركية</option>
-      <option value="fr">🇫🇷 الفرنسية</option>
-      <option value="es">🇪🇸 الإسبانية</option>
-      <option value="de">🇩🇪 الألمانيّة</option>
-      <option value="it">🇮🇹 الإيطالية</option>
-      <option value="ru">🇷🇺 الروسية</option>
-      <option value="zh">🇨🇳 الصينية</option>
-      <option value="ja">🇯🇵 اليابانية</option>
-    </select>
+            <!-- صناديق النصوص -->
+            <div class="text-panes">
+                <div class="pane">
+                    <textarea id="inputText" placeholder="اكتب النص هنا أو استخدم الميكروفون..."></textarea>
+                    <div class="pane-footer">
+                        <span id="charCount">0 / 5000</span>
+                        <div class="actions">
+                            <button id="micBtn" class="icon-btn" title="إدخال صوتي"><i class="fas fa-microphone"></i></button>
+                            <button id="clearBtn" class="icon-btn" title="مسح"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
 
-    <button class="swap" id="swapBtn" title="تبديل اللغات">⇅</button>
+                <div class="pane">
+                    <textarea id="outputText" placeholder="الترجمة ستظهر هنا..." readonly></textarea>
+                    <div class="pane-footer">
+                        <span id="statusText"></span>
+                        <div class="actions">
+                            <button id="speakBtn" class="icon-btn" title="نطق الترجمة"><i class="fas fa-volume-up"></i></button>
+                            <button id="copyBtn" class="icon-btn" title="نسخ"><i class="fas fa-copy"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    <select id="toLang" class="lang-select">
-      <option value="en">🇬🇧 الإنجليزية</option>
-      <option value="ar">🇸🇦 العربية</option>
-      <option value="tr">🇹🇷 التركية</option>
-      <option value="fr">🇫🇷 الفرنسية</option>
-      <option value="es">🇪🇸 الإسبانية</option>
-      <option value="de">🇩🇪 الألمانيّة</option>
-      <option value="it">🇮🇹 الإيطالية</option>
-      <option value="ru">🇷🇺 الروسية</option>
-      <option value="zh">🇨🇳 الصينية</option>
-      <option value="ja">🇯🇵 اليابانية</option>
-    </select>
-  </div>
+            <!-- زر الترجمة -->
+            <button id="translateBtn" class="main-btn">
+                <i class="fas fa-robot"></i> ترجم بالذكاء الاصطناعي
+            </button>
+        </section>
 
-  <div class="grid">
-    <!-- كرت النص المكتوب / الترجمة الصوتية المدخلة -->
-    <div class="card">
-      <div class="card-top">
-        <span id="fromLabel">النص الأصلي</span>
-        <button class="mini" id="micBtn" title="ترجمة صوتية (تحدث الآن)">🎤</button>
-      </div>
-      <textarea id="inputText" dir="rtl" placeholder="اكتب النص هنا أو اضغط الميكروفون للترجمة الصوتية...">مرحبا، كيف حالك اليوم؟</textarea>
-      <div class="card-bottom">
-        <span id="charCount">24/5000</span>
-      </div>
-    </div>
+        <!-- سجل الترجمة -->
+        <section class="history-section">
+            <div class="history-header">
+                <h2><i class="fas fa-history"></i> سجل الترجمة</h2>
+                <button id="clearHistoryBtn" class="clear-history-btn">مسح السجل</button>
+            </div>
+            <div id="historyList" class="history-list">
+                <!-- سيتم إضافة العناصر هنا ديناميكياً -->
+                <p class="empty-history">لا يوجد سجل ترجمة بعد.</p>
+            </div>
+        </section>
+    </main>
 
-    <!-- كرت النتيجة والترجمة الصوتية المسموعة -->
-    <div class="card">
-      <div class="card-top">
-        <span id="toLabel">الترجمة</span>
-        <button class="mini" id="speakBtn" title="استماع للترجمة الصوتية">🔊</button>
-      </div>
-      <div id="outputText" class="output">Hello, how are you today?</div>
-      <div id="badge" class="badge">🤖 AI - Friendly</div>
-    </div>
-  </div>
+    <!-- إشعارات -->
+    <div id="toast" class="toast"></div>
 
-  <!-- زر الترجمة الرئيسي والأنماط -->
-  <div class="cta-wrap">
-    <button id="translateBtn" class="primary">✦ ترجمة بذكاء الاصطناعي</button>
-    <div class="secondary">
-      <button class="sec" onclick="setMode('friendly')">😊 عامي / ودي</button>
-      <button class="sec" onclick="setMode('formal')">💼 رسمي</button>
-      <button class="sec" onclick="setMode('syrian')">🇸🇾 لهجة سورية</button>
-      <button class="sec" onclick="setMode('turkish')">🇹🇷 احترافي تركي</button>
-    </div>
-  </div>
-</main>
-
-<div id="keyModal" class="modal hidden">
-  <div class="modal-content" style="text-align:left;direction:ltr">
-    <h3>🔑 OpenAI API Key</h3>
-    <p style="font-size:13px;margin:8px 0">احصل على المفتاح من: <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com/api-keys</a></p>
-    <input id="apiKeyInput" type="password" placeholder="sk-..." style="width:100%;padding:12px;border-radius:12px;border:1px solid #ddd;margin:10px 0">
-    <button id="saveKey" class="primary" style="width:100%">حفظ</button>
-    <p style="font-size:11px;margin-top:8px;color:#888">المفتاح يُحفظ محلياً في جهازك فقط (localStorage).</p>
-    <button id="closeKey" class="sec" style="margin-top:10px">إغلاق</button>
-  </div>
-</div>
-
-<div id="toast"></div>
-<script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
