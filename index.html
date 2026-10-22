@@ -2,371 +2,127 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>سُكون | حلول العزل الصوتي الهندسية</title>
-  <meta name="description" content="شركة سُكون للعزل الصوتي: قياس ديسيبل ميداني، عزل جدران وأسقف ونوافذ، معالجة صدى الاستوديوهات، وتسليم موثّق بتقرير قبل وبعد.">
-  <meta property="og:title" content="سُكون | حلول العزل الصوتي الهندسية">
-  <meta property="og:description" content="نقيس الضجيج، نصمم الحل، ونسلّمك هدوءًا موثّقًا بالأرقام.">
-  <meta property="og:type" content="website">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0a0a0a">
+  <title>نغم ♪</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;800;900&family=IBM+Plex+Sans+Arabic:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-  <script>
-    // منع وميض الثيم عند التحميل
-    document.documentElement.dataset.theme =
-      localStorage.getItem("sukoon-theme") ||
-      (matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
-  </script>
 </head>
-<body>
+<body class="dark">
 
-  <!-- ══════ الهيدر ══════ -->
-  <header class="site-header" id="siteHeader">
-    <div class="container header-inner">
-      <a href="#hero" class="logo" aria-label="سُكون - الرئيسية">
-        <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><path d="M3 16h4l3-9 5 18 4-13 3 6h7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <span>سُكُون</span>
-      </a>
-      <nav class="site-nav" id="siteNav" aria-label="التنقل الرئيسي">
-        <a href="#about">من نحن</a>
-        <a href="#services">الخدمات</a>
-        <a href="#materials">المواد</a>
-        <a href="#compare">قبل / بعد</a>
-        <a href="#projects">مشاريعنا</a>
-        <a href="#calculator">حاسبة التكلفة</a>
-        <a href="#faq">الأسئلة الشائعة</a>
-      </nav>
-      <a href="#contact" class="btn btn-primary header-cta">اطلب فحصًا مجانيًا</a>
-      <button class="theme-toggle" id="themeToggle" aria-label="تبديل الوضع">
-        <svg class="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
-        <svg class="icon-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1111.2 3 7 7 0 0021 12.8z"/></svg>
-      </button>
-      <button class="nav-toggle" id="navToggle" aria-label="فتح القائمة" aria-expanded="false" aria-controls="siteNav">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
+  <header class="topbar glass">
+    <button id="menu-btn" class="icon-btn">☰</button>
+    <div class="brand"><span class="gold">♪</span> نغم</div>
+    <button id="theme-btn" class="icon-btn">🌙</button>
   </header>
 
-  <main>
-
-    <!-- ══════ الافتتاحية: مقياس الديسيبل الحي ══════ -->
-    <section class="hero" id="hero">
-      <canvas id="waveCanvas" aria-hidden="true"></canvas>
-      <div class="container hero-inner">
-        <p class="hero-kicker reveal">شركة سُكون للعزل الصوتي — حلول هندسية موثّقة</p>
-        <h1 class="reveal">اسمع العالم… <span class="grad-text">بصوتٍ أخف</span></h1>
-        <p class="hero-sub reveal">نقيس الضجيج بالأجهزة، نصمّم الحل الهندسي المناسب، ونسلّمك هدوءًا موثّقًا بتقرير «قبل وبعد» وضمان مكتوب.</p>
-
-        <div class="db-console reveal" role="group" aria-label="محاكاة مستوى العزل الصوتي">
-          <div class="db-readout">
-            <div class="db-number"><span id="dbValue">85</span><small>dB</small></div>
-            <span class="db-state" id="dbState">ضجيج مرهق</span>
-          </div>
-          <div class="db-control">
-            <label for="insulationRange">اسحب لترى أثر العزل ↓</label>
-            <input type="range" id="insulationRange" min="0" max="100" value="0" step="1" aria-label="مستوى العزل الصوتي">
-            <div class="range-labels"><span>بدون عزل</span><span>عزل كامل</span></div>
-          </div>
-        </div>
-
-        <div class="hero-actions reveal">
-          <a class="btn btn-primary" href="#contact">اطلب فحصًا مجانيًا</a>
-          <a class="btn btn-ghost" href="#calculator">جرّب حاسبة التكلفة</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- ══════ شريط الثقة ══════ -->
-    <section class="trust" aria-label="أرقامنا وقطاعاتنا">
-      <div class="container counters">
-        <div class="counter"><strong><span data-count="14">0</span>+</strong><span>سنة خبرة</span></div>
-        <div class="counter"><strong><span data-count="340000">0</span>+</strong><span>م² معزول</span></div>
-        <div class="counter"><strong><span data-count="950">0</span>+</strong><span>عميل</span></div>
-        <div class="counter"><strong><span data-count="10">0</span></strong><span>سنوات ضمان</span></div>
-      </div>
-      <div class="marquee" aria-hidden="true">
-        <div class="marquee-track">
-          <span>مستشفيات</span><span>استوديوهات</span><span>فنادق</span><span>مصانع</span><span>دور سينما</span><span>مكاتب</span><span>مدارس</span><span>مطاعم</span><span>منازل ذكية</span>
-          <span>مستشفيات</span><span>استوديوهات</span><span>فنادق</span><span>مصانع</span><span>دور سينما</span><span>مكاتب</span><span>مدارس</span><span>مطاعم</span><span>منازل ذكية</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- ══════ من نحن ══════ -->
-    <section class="section" id="about">
-      <div class="container about-grid">
-        <div class="about-media reveal">
-          <img class="kenburns" src="https://picsum.photos/seed/acoustic-engineer/700/840" alt="مهندس صوتي يجري قياس ديسيبل ميدانيًا" loading="lazy">
-          <div class="about-badge"><strong>+340,000 م²</strong><span>هدوء صنعناها منذ 2011</span></div>
-        </div>
-        <div class="about-copy">
-          <p class="section-kicker reveal">من نحن</p>
-          <h2 class="section-title reveal">مهندسون نطارد الديسيبل الزائد</h2>
-          <p class="reveal">تأسست «سُكون» عام 2011 على قناعة بسيطة: الهدوء ليس رفاهية، بل حق هندسي. لذلك لا نبيع مواد عزل، بل نصمم حلولًا تبدأ دائمًا بجهاز القياس وتنتهي بتقرير موثّق.</p>
-          <p class="reveal">فريقنا من مهندسي صوتيات وفنيي تركيب معتمدين، عملنا خلاله مع مستشفيات واستوديوهات ومصانع ومنازل سكنية — وكل مشروع يمر بنفس المنهجية الصارمة.</p>
-          <ul class="about-list">
-            <li class="reveal">فريق قياس معتمد بأجهزة تُعاير سنويًا</li>
-            <li class="reveal">مواد حاصلة على شهادات صحية ومقاومة حريق</li>
-            <li class="reveal">تقرير «قبل/بعد» موثّق مع كل مشروع</li>
-            <li class="reveal">ضمان مكتوب 10 سنوات على الأداء والتركيب</li>
-          </ul>
-          <a href="#contact" class="btn btn-primary reveal">تحدث إلى مهندس الآن</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- ══════ الخدمات ══════ -->
-    <section class="section section-alt" id="services">
-      <div class="container">
-        <p class="section-kicker reveal">خدماتنا</p>
-        <h2 class="section-title reveal">حلول لكل مصدر إزعاج</h2>
-        <div class="cards-grid">
-          <article class="card reveal">
-            <div class="card-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="1"/><path d="M3 9h18M3 15h18M9 4v5M15 9v6M9 15v5"/></svg></div>
-            <span class="card-badge">حتى -35dB</span>
-            <h3>عزل الجدران المشتركة</h3>
-            <p>نظام جدار مزدوج مع صوف صخري عالي الكثافة وفجوة هوائية، يقطع انتقال أصوات الجيران والتلفاز نهائيًا.</p>
-          </article>
-          <article class="card reveal">
-            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M3 5h18M5 5v3M12 5v3M19 5v3M7 14c2-2 8-2 10 0M9 18c1.5-1.5 4.5-1.5 6 0"/></svg></div>
-            <span class="card-badge">حتى -30dB</span>
-            <h3>عزل الأسقف المعلّقة</h3>
-            <p>سقف عائم على موانع اهتزاز يمتص الضوضاء الهوائية وخطوات الطابق العلوي دون خفض كبير في الارتفاع.</p>
-          </article>
-          <article class="card reveal">
-            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M3 20h18M4 20l4-12h8l4 12M8 12h8M10 8h4"/></svg></div>
-            <span class="card-badge">حتى -25dB</span>
-            <h3>عزل الأرضيات</h3>
-            <p>طبقات عزل للاهتزازات تحت الباركيه والبلاط، تحل مشكلة انتقال الخطوات والأثاث بين الطوابق.</p>
-          </article>
-          <article class="card reveal">
-            <div class="card-icon"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="1"/><path d="M12 3v18M4 12h16"/></svg></div>
-            <span class="card-badge">حتى -40dB</span>
-            <h3>عزل النوافذ الزجاجية</h3>
-            <p>زجاج مزدوج أو ثلاثي بسماكات متفاوتة مع إحكام كامل للفراغات — الحل الأقوى ضد ضجيج الشوارع.</p>
-          </article>
-          <article class="card reveal">
-            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M4 12h2l2-6 3 12 3-9 2 5h4"/></svg></div>
-            <span class="card-badge">NRC 0.95</span>
-            <h3>معالجة صدى الاستوديوهات</h3>
-            <p>ألواح امتصاص ومشتتات صوتية مدروسة الترددات لتسجيل نقي بلا صدى، للمشاريع الفنية والبودكاست.</p>
-          </article>
-          <article class="card reveal">
-            <div class="card-icon"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h5M16 17a2 2 0 100-4 2 2 0 000 4z"/></svg></div>
-            <span class="card-badge">خصوصية كاملة</span>
-            <h3>كبائن وغرف الاجتماعات</h3>
-            <p>كبائن جاهزة وغرف معالجة تمنع تسرب الكلام داخل وخارج القاعات، مثالية للبنوك والمكاتب المفتوحة.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- ══════ جدول المواد ══════ -->
-    <section class="section" id="materials">
-      <div class="container">
-        <p class="section-kicker reveal">المواد المعتمدة</p>
-        <h2 class="section-title reveal">قارن قبل أن تختار</h2>
-        <div class="table-wrap reveal">
-          <table>
-            <thead><tr><th scope="col">المادة</th><th scope="col">معامل الامتصاص NRC</th><th scope="col">السماكة</th><th scope="col">مقاومة الحريق</th><th scope="col">السعر التقريبي</th></tr></thead>
-            <tbody>
-              <tr><td>صوف صخري عالي الكثافة</td><td>0.90</td><td>5 – 10 سم</td><td>فئة A1 — غير قابل للاشتعال</td><td>من 95 ر.س / م²</td></tr>
-              <tr><td>فوم ميلامين</td><td>0.85</td><td>3 – 5 سم</td><td>فئة B1</td><td>من 120 ر.س / م²</td></tr>
-              <tr><td>ألواح بوليستر صوتية</td><td>0.80</td><td>9 – 24 مم</td><td>فئة B1</td><td>من 140 ر.س / م²</td></tr>
-              <tr><td>ستائر صوتية متعددة الطبقات</td><td>0.60</td><td>طبقات مركّبة</td><td>فئة B2</td><td>من 75 ر.س / م²</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="table-note reveal">* الأسعار استرشادية وتشمل المادة فقط؛ التكلفة النهائية تُحدد بعد القياس الميداني المجاني.</p>
-      </div>
-    </section>
-
-    <!-- ══════ قبل / بعد ══════ -->
-    <section class="section section-alt" id="compare">
-      <div class="container">
-        <p class="section-kicker reveal">النتيجة الموثّقة</p>
-        <h2 class="section-title reveal">قبل العزل… وبعده</h2>
-        <p class="section-sub reveal">اسحب المقبض لتشاهد الفرق الذي يحدثه حل هندسي واحد.</p>
-        <div class="ba-wrap reveal" id="baWrap">
-          <div class="ba-layer ba-before" aria-hidden="true">
-            <span class="ba-chip chip-noise">قبل العزل · 80dB</span>
-            <svg class="ba-wave" viewBox="0 0 600 160" preserveAspectRatio="none"><polyline points="0,80 20,30 40,120 60,15 80,135 100,45 120,110 140,20 160,140 180,55 200,100 220,25 240,130 260,40 280,115 300,18 320,138 340,50 360,105 380,22 400,132 420,48 440,112 460,28 480,125 500,42 520,108 540,20 560,134 580,52 600,80" fill="none" stroke="#FF6B35" stroke-width="2.5"/></svg>
-          </div>
-          <div class="ba-layer ba-after" aria-hidden="true">
-            <span class="ba-chip chip-calm">بعد العزل · 28dB</span>
-            <svg class="ba-wave" viewBox="0 0 600 160" preserveAspectRatio="none"><path d="M0,80 C75,60 150,100 225,80 S 375,60 450,80 S 560,95 600,80" fill="none" stroke="#2DD4BF" stroke-width="2.5"/></svg>
-          </div>
-          <div class="ba-handle" id="baHandle" role="slider" tabindex="0" aria-label="مقارنة قبل وبعد العزل" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
-            <span class="ba-grip">‹ ›</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ══════ خطوات العمل ══════ -->
-    <section class="section" id="process">
-      <div class="container process-grid">
-        <aside class="process-sticky">
-          <p class="section-kicker">منهجية العمل</p>
-          <h2 class="section-title">أربع خطوات إلى السكون</h2>
-          <p class="section-sub">لا نركّب قبل أن نقيس، ولا نسلّم قبل أن نتحقق. منهجية هندسية ثابتة في كل مشروع.</p>
-        </aside>
-        <ol class="steps">
-          <li class="step"><span class="step-num">01</span><div><h3>فحص وقياس صوتي</h3><p>زيارة ميدانية بجهاز قياس ديسيبل معاير، وتحديد خريطة كاملة لمصادر الضجيج ومساراته.</p></div></li>
-          <li class="step"><span class="step-num">02</span><div><h3>تصميم الحل</h3><p>اختيار المواد والتركيبات الأنسب حسب نتائج القياس والميزانية، مع عرض سعر مفصل وثابت.</p></div></li>
-          <li class="step"><span class="step-num">03</span><div><h3>التوريد والتركيب</h3><p>فريق فني معتمد ينفّذ العمل خلال 3 – 7 أيام عمل مع حماية كاملة للموقع ونظافة يومية.</p></div></li>
-          <li class="step"><span class="step-num">04</span><div><h3>قياس التحقق والتسليم</h3><p>إعادة القياس أمامك، وتسليم تقرير «قبل/بعد» موثّق مع ضمان مكتوب 10 سنوات.</p></div></li>
-        </ol>
-      </div>
-    </section>
-
-    <!-- ══════ المشاريع ══════ -->
-    <section class="section section-alt" id="projects">
-      <div class="container">
-        <p class="section-kicker reveal">أعمالنا</p>
-        <h2 class="section-title reveal">مشاريع تكلّم عنها الهدوء</h2>
-        <div class="masonry">
-          <figure class="project reveal"><img src="https://picsum.photos/seed/acoustic-studio/640/480" alt="استوديو تسجيل معالج صوتيًا" loading="lazy"><figcaption><h3>استوديو تسجيل «نغمة»</h3><span>قطاع الإنتاج الفني · من 68 إلى 24dB</span></figcaption></figure>
-          <figure class="project reveal"><img src="https://picsum.photos/seed/home-cinema/640/760" alt="سينما منزلية معزولة" loading="lazy"><figcaption><h3>سينما منزلية خاصة</h3><span>قطاع سكني · تخفيض -42dB</span></figcaption></figure>
-          <figure class="project reveal"><img src="https://picsum.photos/seed/meeting-room/640/520" alt="قاعة اجتماعات بنك" loading="lazy"><figcaption><h3>قاعة اجتماعات مصرفية</h3><span>قطاع مصرفي · خصوصية كلام 100%</span></figcaption></figure>
-          <figure class="project reveal"><img src="https://picsum.photos/seed/industrial-plant/640/700" alt="خط إنتاج مصنع بعد العزل" loading="lazy"><figcaption><h3>خط إنتاج مصنع بلاستيك</h3><span>قطاع صناعي · من 96 إلى 62dB</span></figcaption></figure>
-          <figure class="project reveal"><img src="https://picsum.photos/seed/hotel-suite/640/460" alt="جناح فندقي مطل على شارع رئيسي" loading="lazy"><figcaption><h3>أجنحة فندقية مطلة على شارع</h3><span>قطاع فندقي · تخفيض -38dB</span></figcaption></figure>
-          <figure class="project reveal"><img src="https://picsum.photos/seed/office-pods/640/560" alt="كبائن مكاتب مفتوحة" loading="lazy"><figcaption><h3>كبائن مكاتب مفتوحة</h3><span>قطاع مكاتب · زمن صدى 0.4 ثانية</span></figcaption></figure>
-        </div>
-      </div>
-    </section>
-
-    <!-- ══════ حاسبة التكلفة ══════ -->
-    <section class="section" id="calculator">
-      <div class="container">
-        <p class="section-kicker reveal">أداة فورية</p>
-        <h2 class="section-title reveal">احسب تكلفة عزل مساحتك</h2>
-        <div class="calc-grid">
-          <form class="calc-form reveal" aria-label="حاسبة التكلفة">
-            <div class="field"><label for="calcArea">المساحة التقريبية (م²)</label><input type="number" id="calcArea" min="1" max="2000" value="40" inputmode="numeric"></div>
-            <div class="field"><label for="calcType">نوع العزل</label>
-              <select id="calcType"><option value="1">جدران</option><option value="1.15">أسقف</option><option value="1.05">أرضيات</option><option value="1.5">نوافذ</option></select>
-            </div>
-            <div class="field"><label for="calcMaterial">المادة</label>
-              <select id="calcMaterial">
-                <option value="95" data-red="حتى 35dB">صوف صخري — 95 ر.س/م²</option>
-                <option value="120" data-red="حتى 30dB">فوم ميلامين — 120 ر.س/م²</option>
-                <option value="140" data-red="حتى 28dB">ألواح بوليستر — 140 ر.س/م²</option>
-                <option value="75" data-red="حتى 18dB">ستائر صوتية — 75 ر.س/م²</option>
-              </select>
-            </div>
-            <div class="field"><label for="calcPlace">نوع المكان</label>
-              <select id="calcPlace"><option value="1">سكني</option><option value="1.15">تجاري</option><option value="1.3">صناعي</option></select>
-            </div>
-          </form>
-          <div class="calc-result reveal" role="status" aria-live="polite">
-            <p class="calc-label">التكلفة التقديرية</p>
-            <p class="calc-cost"><span id="calcCost">3,800</span> <small>ر.س</small></p>
-            <p class="calc-sub">تخفيض متوقع للضجيج: <strong id="calcReduction">حتى 35dB</strong></p>
-            <p class="calc-note">الرقم تقريبي ويشمل التوريد والتركيب. المعاينة والقياس مجانًا دائمًا.</p>
-            <a class="btn btn-primary btn-block" id="calcWhatsapp" href="#" target="_blank" rel="noopener">احجز معاينة مجانية عبر واتساب</a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ══════ آراء العملاء ══════ -->
-    <section class="section section-alt" id="testimonials">
-      <div class="container">
-        <p class="section-kicker reveal">قالوا عنّا</p>
-        <h2 class="section-title reveal">عملاء سمعوا الفرق</h2>
-        <div class="testi-grid">
-          <blockquote class="testi reveal"><span class="stars" aria-label="خمس نجوم">★★★★★</span><p>«قياس ما قبل وما بعد التركيب كان الفيصل. الفريق حوّل أجنحة المرضى المطلة على طريق سريع إلى غرف هادئة تمامًا خلال 4 أيام.»</p><footer>— م. خالد العتيبي، مدير مرافق مستشفى خاص</footer></blockquote>
-          <blockquote class="testi reveal"><span class="stars" aria-label="خمس نجوم">★★★★★</span><p>«كنت أعاني من صدى يفسد كل تسجيل. بعد المعالجة صار صوت الاستوديو أنقى من استوديوهات كبيرة جربتها. شغل مدروس علميًا.»</p><footer>— سارة المطيري، صاحبة استوديو بودكاست</footer></blockquote>
-          <blockquote class="testi reveal"><span class="stars" aria-label="خمس نجوم">★★★★★</span><p>«بيتي ملاصق لطريق سريع وكنت فاقد الأمل. عزلوا النوافذ والجدار المشترك، والفرق كأنهم نقلوا البيت لمكان ثانٍ.»</p><footer>— عبدالله الشمري، مالك منزل سكني</footer></blockquote>
-        </div>
-      </div>
-    </section>
-
-    <!-- ══════ الأسئلة الشائعة ══════ -->
-    <section class="section" id="faq">
-      <div class="container container-narrow">
-        <p class="section-kicker reveal">استفسارات</p>
-        <h2 class="section-title reveal">الأسئلة الشائعة</h2>
-        <div class="faq-list">
-          <div class="faq-item reveal"><button class="faq-q" aria-expanded="false">هل يحتاج العزل الصوتي إلى كسر الجدران؟</button><div class="faq-a"><p>غالبًا لا. أغلب حلولنا تُركّب فوق الجدار القائم (جدار ثانٍ مستقل) دون أي تكسير، باستثناء حالات عزل الأرضيات تحت التشطيب الجديد.</p></div></div>
-          <div class="faq-item reveal"><button class="faq-q" aria-expanded="false">كم يستغرق التركيب؟</button><div class="faq-a"><p>غرفة واحدة تُنجز خلال يوم إلى يومين، والمشاريع الكبيرة تُجدول حسب المساحة — نلتزم بموعد مكتوب في العقد.</p></div></div>
-          <div class="faq-item reveal"><button class="faq-q" aria-expanded="false">ما الفرق بين العزل والامتصاص الصوتي؟</button><div class="faq-a"><p>العزل يمنع انتقال الصوت من الخارج للداخل (والعكس)، بينما الامتصاص يعالج الصدى والرنين داخل الغرفة نفسها. الحل الصحيح غالبًا يجمع بينهما.</p></div></div>
-          <div class="faq-item reveal"><button class="faq-q" aria-expanded="false">هل المواد آمنة وصحية؟</button><div class="faq-a"><p>جميع المواد معتمدة، خالية من الأسبستوس، وغير مُطلقة للألياف، ومناسبة لغرف النوم والمستشفيات والمدارس.</p></div></div>
-          <div class="faq-item reveal"><button class="faq-q" aria-expanded="false">هل تقدمون ضمانًا؟</button><div class="faq-a"><p>نعم، ضمان مكتوب 10 سنوات على جودة التركيب والأداء، مع زيارة تحقق مجانية بعد سنة من التسليم.</p></div></div>
-          <div class="faq-item reveal"><button class="faq-q" aria-expanded="false">هل يمكن العزل في المباني المؤجرة؟</button><div class="faq-a"><p>نعم، لدينا حلول قابلة للفك والنقل (جدران مستقلة، ستائر صوتية، كبائن جاهزة) لا تترك أثرًا على المبنى الأصلي.</p></div></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ══════ التواصل + الخريطة ══════ -->
-    <section class="section section-alt" id="contact">
-      <div class="container">
-        <p class="section-kicker reveal">ابدأ الآن</p>
-        <h2 class="section-title reveal">اطلب قياسًا مجانيًا لموقعك</h2>
-        <div class="contact-grid">
-          <form class="contact-form reveal" id="contactForm" novalidate>
-            <div class="field"><label for="cfName">الاسم</label><input type="text" id="cfName" required autocomplete="name"></div>
-            <div class="field"><label for="cfPhone">رقم الجوال</label><input type="tel" id="cfPhone" required autocomplete="tel" inputmode="tel"></div>
-            <div class="field"><label for="cfCity">المدينة</label><input type="text" id="cfCity" required autocomplete="address-level2"></div>
-            <div class="field"><label for="cfProblem">صف المشكلة باختصار</label><textarea id="cfProblem" rows="4" placeholder="مثال: ضجيج شارع يدخل من النوافذ في غرفة النوم"></textarea></div>
-            <button type="submit" class="btn btn-primary btn-block">أرسل الطلب</button>
-            <p class="form-msg" id="formMsg" role="status"></p>
-          </form>
-          <aside class="contact-info reveal">
-            <h3>معلومات التواصل المباشر</h3>
-            <ul>
-              <li><strong>الهاتف الموحد:</strong> 9200 00000</li>
-              <li><strong>واتساب:</strong> 0500000000</li>
-              <li><strong>البريد:</strong> info@sukoon.sa</li>
-              <li><strong>المقر:</strong> الرياض — حي العليا</li>
-              <li><strong>ساعات العمل:</strong> السبت – الخميس، 9ص – 6م</li>
-            </ul>
-            <p class="contact-note">نرد على طلبات القياس خلال أقل من 24 ساعة عمل.</p>
-          </aside>
-        </div>
-        <div class="map-wrap reveal">
-          <iframe src="https://www.google.com/maps?q=Olaya%2C%20Riyadh%2C%20Saudi%20Arabia&output=embed" title="موقع سُكون على الخريطة" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade"></iframe>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <!-- ══════ الفوتر ══════ -->
-  <footer class="site-footer">
-    <svg class="footer-wave" viewBox="0 0 1440 48" preserveAspectRatio="none" aria-hidden="true">
-      <path d="M0,24 C120,8 240,40 360,24 S 600,8 720,24 S 960,40 1080,24 S 1320,8 1440,24 L1440,48 L0,48 Z"/>
-    </svg>
-    <div class="container footer-grid">
-      <div>
-        <a href="#hero" class="logo logo-footer">
-          <svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true"><path d="M3 16h4l3-9 5 18 4-13 3 6h7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <span>سُكُون</span>
-        </a>
-        <p>شركة متخصصة في العزل والمعالجة الصوتية منذ 2011. نقيس، نصمم، نركّب، ونوثّق النتيجة.</p>
-      </div>
-      <nav aria-label="روابط الفوتر">
-        <h4>روابط سريعة</h4>
-        <a href="#about">من نحن</a>
-        <a href="#services">الخدمات</a>
-        <a href="#materials">المواد</a>
-        <a href="#projects">مشاريعنا</a>
-        <a href="#calculator">حاسبة التكلفة</a>
-        <a href="#faq">الأسئلة الشائعة</a>
-      </nav>
-      <div>
-        <h4>تواصل معنا</h4>
-        <p>9200 00000<br>info@sukoon.sa<br>الرياض — حي العليا</p>
-      </div>
+  <aside class="drawer" id="drawer">
+    <div class="drawer-head">
+      <span class="brand"><span class="gold">♪</span> نغم</span>
+      <button id="close-drawer" class="icon-btn">✕</button>
     </div>
-    <p class="copyright">© <span id="year">2026</span> سُكون للعزل الصوتي — جميع الحقوق محفوظة.</p>
+    <nav class="drawer-nav">
+      <a href="#home">🏠 الرئيسية</a>
+      <a href="#tracks">🎵 المقطوعات</a>
+      <a href="#about">👤 عن الفنان</a>
+      <a href="#contact">📞 تواصل</a>
+    </nav>
+  </aside>
+  <div class="overlay" id="overlay"></div>
+
+  <section id="home" class="hero">
+    <canvas id="hero-canvas"></canvas>
+    <div class="hero-inner">
+      <h1>تجربة موسيقية<br><span class="gold">غامرة</span></h1>
+      <p>ثلاث مقطوعات أصلية في رحلة واحدة</p>
+      <button class="btn-primary" id="hero-play">▶ ابدأ الاستماع</button>
+    </div>
+  </section>
+
+  <section id="tracks" class="section">
+    <h2 class="section-title">المقطوعات</h2>
+
+    <article class="track-card" data-track="0">
+      <div class="card-cover"><span class="card-num">01</span></div>
+      <div class="card-info"><h3>البداية</h3><p>2:45 · هادئ</p></div>
+      <button class="card-play" data-track="0">▶</button>
+    </article>
+
+    <article class="track-card" data-track="1">
+      <div class="card-cover"><span class="card-num">02</span></div>
+      <div class="card-info"><h3>الذروة</h3><p>3:30 · ملحمي</p></div>
+      <button class="card-play" data-track="1">▶</button>
+    </article>
+
+    <article class="track-card" data-track="2">
+      <div class="card-cover"><span class="card-num">03</span></div>
+      <div class="card-info"><h3>الختام</h3><p>4:15 · تأملي</p></div>
+      <button class="card-play" data-track="2">▶</button>
+    </article>
+  </section>
+
+  <section id="about" class="section about">
+    <div class="avatar">🎼</div>
+    <h2 class="section-title">عن الفنان</h2>
+    <p>مؤلف موسيقي ومهندس صوت، يجمع بين الأصالة والحداثة. هذه المقطوعات الثلاث تمثل رحلة متكاملة عبر المشاعر الإنسانية.</p>
+  </section>
+
+  <footer id="contact" class="footer">
+    <div class="socials">
+      <a href="#">🎧</a><a href="#">📺</a><a href="#">📷</a><a href="#">🐦</a>
+    </div>
+    <p>© 2025 نغم</p>
   </footer>
 
-  <a class="wa-float" href="https://wa.me/966500000000" target="_blank" rel="noopener" aria-label="تواصل عبر واتساب">
-    <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 00-8.6 15.1L2 22l5-1.3A10 10 0 1012 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.4-.7-2.9-1.1-4.7-4-4.9-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5s.8 1.9.8 2c.1.1.1.3 0 .5-.3.6-.7.9-.5 1.2.8 1.3 1.8 2.1 3 2.7.3.2.5.1.7-.1l.7-.9c.2-.3.4-.2.7-.1l1.9.9c.3.2.5.2.6.4 0 .1 0 .7-.2 1.1z"/></svg>
-  </a>
+  <div class="mini-player" id="mini-player">
+    <div class="mini-thumb">♪</div>
+    <div class="mini-info">
+      <strong id="mini-title">البداية</strong>
+      <span id="mini-artist">نغم</span>
+    </div>
+    <button id="mini-play" class="icon-btn play-btn">▶</button>
+    <button id="mini-expand" class="icon-btn">⌃</button>
+    <div class="mini-progress"><div id="mini-progress-fill"></div></div>
+  </div>
 
-  <script src="script.js"></script>
+  <div class="full-player" id="full-player">
+    <div class="fp-head">
+      <button id="fp-close" class="icon-btn">⌄</button>
+      <span>قيد التشغيل</span>
+      <button id="fp-shuffle" class="icon-btn">🔀</button>
+    </div>
+    <div class="fp-cover"><div class="fp-art">♪</div></div>
+    <div class="fp-meta">
+      <h2 id="fp-title">البداية</h2>
+      <p id="fp-artist">نغم</p>
+    </div>
+    <div class="fp-progress-wrap">
+      <div class="fp-progress" id="fp-progress">
+        <div class="fp-progress-fill" id="fp-progress-fill"></div>
+      </div>
+      <div class="fp-times">
+        <span id="fp-current">0:00</span>
+        <span id="fp-duration">0:00</span>
+      </div>
+    </div>
+    <div class="fp-controls">
+      <button id="fp-prev" class="icon-btn big">⏮</button>
+      <button id="fp-play" class="icon-btn play-btn xl">▶</button>
+      <button id="fp-next" class="icon-btn big">⏭</button>
+    </div>
+    <div class="fp-extra">
+      <button id="fp-repeat" class="icon-btn">🔁</button>
+      <div class="fp-volume">
+        <span id="fp-mute">🔊</span>
+        <input type="range" id="fp-vol" min="0" max="1" step="0.01" value="0.8">
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
