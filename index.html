@@ -3,41 +3,44 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LinguaAI - الترجمة الذكية</title>
+  <title>LinguaAI Pro - الترجمة الذكية</title>
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <!-- مكتبات معالجة الملفات -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 </head>
 <body>
 
-  <!-- الهيدر -->
+  <!-- ===== الهيدر ===== -->
   <header class="header">
     <div class="logo">
       <span class="logo-icon">🌐</span>
-      <span class="logo-text">LinguaAI</span>
+      <span class="logo-text">LinguaAI <small style="font-size:12px;color:#8b5cf6">PRO</small></span>
     </div>
     <nav class="nav">
       <a href="#translator">المترجم</a>
       <a href="#history">السجل</a>
-      <a href="#voice">صوتي</a>
     </nav>
-    <button class="theme-toggle" id="themeToggle" title="تبديل الوضع">
-      <span class="theme-icon">🌙</span>
-    </button>
+    <div class="header-actions">
+      <button class="icon-header-btn" id="settingsBtn" title="الإعدادات">⚙️</button>
+      <button class="icon-header-btn" id="themeToggle" title="الوضع">🌙</button>
+      <button class="auth-btn" id="authBtn">تسجيل الدخول</button>
+    </div>
   </header>
 
-  <!-- القسم الرئيسي -->
   <main class="main">
 
-    <!-- عنوان -->
+    <!-- ===== Hero ===== -->
     <section class="hero">
       <h1>ترجم بذكاء مع <span class="gradient-text">الذكاء الاصطناعي</span></h1>
-      <p>ترجمة فورية، صوتية، ومستندات — بأكثر من 100 لغة</p>
+      <p>PDF • DOCX • صوت • 100+ لغة • محركات AI متعددة</p>
+      <div class="engine-badge" id="engineBadge">⚡ المحرك: MyMemory (مجاني)</div>
     </section>
 
-    <!-- صندوق الترجمة -->
+    <!-- ===== المترجم ===== -->
     <section class="translator-card" id="translator">
 
-      <!-- اختيار اللغات -->
       <div class="lang-bar">
         <div class="lang-select">
           <label>من</label>
@@ -65,9 +68,7 @@
             <option value="id">Bahasa</option>
           </select>
         </div>
-
-        <button class="swap-btn" id="swapBtn" title="تبديل">⇄</button>
-
+        <button class="swap-btn" id="swapBtn">⇄</button>
         <div class="lang-select">
           <label>إلى</label>
           <select id="targetLang">
@@ -95,13 +96,12 @@
         </div>
       </div>
 
-      <!-- منطقتا النص -->
       <div class="text-area-wrapper">
         <div class="text-box">
-          <textarea id="sourceText" placeholder="اكتب النص هنا أو استخدم الميكروفون..."></textarea>
+          <textarea id="sourceText" placeholder="اكتب النص هنا، أو استورد ملف PDF/DOCX/TXT، أو استخدم الميكروفون..."></textarea>
           <div class="text-box-footer">
-            <button class="icon-btn" id="micBtn" title="ترجمة صوتية">🎤</button>
-            <button class="icon-btn" id="importBtn" title="استيراد ملف">📎</button>
+            <button class="icon-btn" id="micBtn" title="صوتي">🎤</button>
+            <button class="icon-btn" id="importBtn" title="استيراد ملف (PDF/DOCX/TXT)">📎</button>
             <button class="icon-btn" id="clearBtn" title="مسح">🗑️</button>
             <span class="char-count" id="charCount">0 / 5000</span>
           </div>
@@ -117,16 +117,20 @@
         </div>
       </div>
 
-      <!-- زر الترجمة -->
       <button class="translate-btn" id="translateBtn">
         <span>ترجم الآن</span>
         <span class="btn-icon">✨</span>
       </button>
 
-      <input type="file" id="fileInput" accept=".txt,.doc,.docx,.pdf" hidden>
+      <div class="file-progress" id="fileProgress" style="display:none">
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        <span id="progressText">جارٍ المعالجة...</span>
+      </div>
+
+      <input type="file" id="fileInput" accept=".txt,.docx,.pdf" hidden>
     </section>
 
-    <!-- السجل -->
+    <!-- ===== السجل ===== -->
     <section class="history-section" id="history">
       <div class="section-header">
         <h2>📚 سجل الترجمات</h2>
@@ -140,10 +144,83 @@
   </main>
 
   <footer class="footer">
-    <p>© 2025 LinguaAI — ترجمة ذكية بلا حدود</p>
+    <p>© 2025 LinguaAI Pro — ترجمة ذكية بلا حدود</p>
   </footer>
 
-  <!-- تنبيه -->
+  <!-- ===== نافذة تسجيل الدخول ===== -->
+  <div class="modal-overlay" id="authModal">
+    <div class="modal">
+      <button class="modal-close" data-close="authModal">✕</button>
+      <h2 id="authTitle">تسجيل الدخول</h2>
+      <p class="modal-subtitle">احفظ سجلك ومزامنته عبر الأجهزة</p>
+
+      <div class="tabs">
+        <button class="tab active" data-tab="login">دخول</button>
+        <button class="tab" data-tab="register">حساب جديد</button>
+      </div>
+
+      <form id="authForm">
+        <div class="form-group" id="nameGroup" style="display:none">
+          <label>الاسم</label>
+          <input type="text" id="authName" placeholder="اسمك الكامل">
+        </div>
+        <div class="form-group">
+          <label>البريد الإلكتروني</label>
+          <input type="email" id="authEmail" placeholder="you@example.com" required>
+        </div>
+        <div class="form-group">
+          <label>كلمة المرور</label>
+          <input type="password" id="authPassword" placeholder="••••••••" required minlength="6">
+        </div>
+        <button type="submit" class="primary-btn" id="authSubmitBtn">دخول</button>
+      </form>
+
+      <div class="divider"><span>أو</span></div>
+      <button class="guest-btn" id="guestBtn">👤 المتابعة كزائر</button>
+    </div>
+  </div>
+
+  <!-- ===== نافذة الإعدادات ===== -->
+  <div class="modal-overlay" id="settingsModal">
+    <div class="modal">
+      <button class="modal-close" data-close="settingsModal">✕</button>
+      <h2>⚙️ إعدادات المحرك</h2>
+      <p class="modal-subtitle">اختر محرك الترجمة المُفضّل</p>
+
+      <div class="engine-option">
+        <input type="radio" name="engine" id="engine-mymemory" value="mymemory" checked>
+        <label for="engine-mymemory">
+          <strong>MyMemory</strong>
+          <span>مجاني • بدون مفتاح • 5000 كلمة/يوم</span>
+        </label>
+      </div>
+
+      <div class="engine-option">
+        <input type="radio" name="engine" id="engine-openai" value="openai">
+        <label for="engine-openai">
+          <strong>OpenAI GPT</strong>
+          <span>جودة عالية جداً • يتطلب مفتاح API</span>
+        </label>
+      </div>
+
+      <div class="engine-option">
+        <input type="radio" name="engine" id="engine-deepl" value="deepl">
+        <label for="engine-deepl">
+          <strong>DeepL</strong>
+          <span>دقة احترافية • يتطلب مفتاح API</span>
+        </label>
+      </div>
+
+      <div class="form-group" id="apiKeyGroup" style="display:none">
+        <label>مفتاح API</label>
+        <input type="password" id="apiKeyInput" placeholder="sk-...">
+        <small>🔒 يُحفظ محلياً في متصفحك فقط</small>
+      </div>
+
+      <button class="primary-btn" id="saveSettings">💾 حفظ الإعدادات</button>
+    </div>
+  </div>
+
   <div class="toast" id="toast"></div>
 
   <script src="script.js"></script>
