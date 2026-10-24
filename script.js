@@ -1,242 +1,115 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // ==================== العناصر ====================
-    const themeToggle = document.getElementById('themeToggle');
-    const body = document.body;
-    const apiBtn = document.getElementById('apiBtn');
-    const apiModal = document.getElementById('apiModal');
-    const closeApi = document.querySelector('.api-close');
-    const saveApiBtn = document.getElementById('saveApiBtn');
-    const apiKeyInput = document.getElementById('apiKeyInput');
-    
-    const settingsBtn = document.getElementById('settingsBtn');
-    const settingsModal = document.getElementById('settingsModal');
-    const closeSettings = document.querySelector('.close-btn');
-    const versionDisplay = document.getElementById('versionDisplay');
-    
-    const clearHistoryBtn = document.getElementById('clearHistoryBtn');
-    const historyList = document.getElementById('historyList');
-    
-    const sourceLang = document.getElementById('sourceLang');
-    const targetLang = document.getElementById('targetLang');
-    const swapLang = document.getElementById('swapLang');
-    
-    const inputText = document.getElementById('inputText');
-    const outputText = document.getElementById('outputText');
-    const translateBtn = document.getElementById('translateBtn');
-    
-    const fileInput = document.getElementById('fileInput');
-    const voiceBtn = document.getElementById('voiceBtn');
+// ========== البيانات ==========
+const languages = {
+    auto: "🔍 اكتشاف تلقائي",
+    ar: "🇸🇦 العربية", en: "🇺🇸 الإنجليزية", fr: "🇫🇷 الفرنسية",
+    es: "🇪🇸 الإسبانية", de: "🇩🇪 الألمانية", it: "🇮🇹 الإيطالية",
+    pt: "🇵🇹 البرتغالية", ru: "🇷🇺 الروسية", zh: "🇨🇳 الصينية",
+    ja: "🇯🇵 اليابانية", ko: "🇰🇷 الكورية", tr: "🇹🇷 التركية",
+    hi: "🇮🇳 الهندية", ur: "🇵🇰 الأردية", fa: "🇮🇷 الفارسية",
+    nl: "🇳🇱 الهولندية", pl: "🇵🇱 البولندية", sv: "🇸🇪 السويدية",
+    da: "🇩🇰 الدنماركية", fi: "🇫🇮 الفنلندية", no: "🇳🇴 النرويجية",
+    el: "🇬🇷 اليونانية", he: "🇮🇱 العبرية", th: "🇹🇭 التايلاندية",
+    vi: "🇻🇳 الفيتنامية", id: "🇮🇩 الإندونيسية", ms: "🇲🇾 الماليزية",
+    uk: "🇺🇦 الأوكرانية", cs: "🇨🇿 التشيكية", ro: "🇷🇴 الرومانية",
+    hu: "🇭🇺 المجرية", bg: "🇧🇬 البلغارية", sk: "🇸🇰 السلوفاكية",
+    hr: "🇭🇷 الكرواتية", sr: "🇷🇸 الصربية", sl: "🇸🇮 السلوفينية",
+    et: "🇪🇪 الإستونية", lv: "🇱🇻 اللاتفية", lt: "🇱🇹 الليتوانية",
+    mt: "🇲🇹 المالطية", ga: "🇮🇪 الأيرلندية", cy: "🏴 الويلزية",
+    ca: "🏴 الكتالونية", eu: "🏴 الباسكية", gl: "🏴 الجاليكية",
+    af: "🇿🇦 الأفريكانية", sw: "🇰🇪 السواحيلية", am: "🇪🇹 الأمهرية",
+    bn: "🇧🇩 البنغالية", ta: "🇮🇳 التاميلية", te: "🇮🇳 التيلوغوية",
+    ml: "🇮🇳 المالايالامية", kn: "🇮🇳 الكانادية", gu: "🇮🇳 الغوجاراتية",
+    mr: "🇮🇳 الماراثية", pa: "🇮🇳 البنجابية", ne: "🇳🇵 النيبالية",
+    si: "🇱🇰 السنهالية", km: "🇰🇭 الخميرية", lo: "🇱🇦 اللاوية",
+    my: "🇲🇲 البورمية", ka: "🇬🇪 الجورجية", hy: "🇦🇲 الأرمينية",
+    az: "🇦🇿 الأذربيجانية", kk: "🇰🇿 الكازاخية", uz: "🇺🇿 الأوزبكية",
+    mn: "🇲🇳 المنغولية", sq: "🇦🇱 الألبانية", mk: "🇲🇰 المقدونية",
+    bs: "🇧🇦 البوسنية", is: "🇮🇸 الأيسلندية", lb: "🇱🇺 اللوكسمبورغية"
+};
 
-    // ==================== 1. الوضع الداكن ====================
-    const currentTheme = localStorage.getItem('theme');
-    if (currentTheme === 'dark') {
-        body.classList.add('dark-mode');
-        themeToggle.textContent = '☀️';
-    }
+// ========== عناصر DOM ==========
+const sourceLang = document.getElementById('sourceLang');
+const targetLang = document.getElementById('targetLang');
+const sourceText = document.getElementById('sourceText');
+const targetText = document.getElementById('targetText');
+const translateBtn = document.getElementById('translateBtn');
+const swapBtn = document.getElementById('swapBtn');
+const clearBtn = document.getElementById('clearBtn');
+const pasteBtn = document.getElementById('pasteBtn');
+const copyBtn = document.getElementById('copyBtn');
+const speakSource = document.getElementById('speakSource');
+const speakTarget = document.getElementById('speakTarget');
+const shareBtn = document.getElementById('shareBtn');
+const charCount = document.getElementById('charCount');
+const status = document.getElementById('status');
+const toast = document.getElementById('toast');
+const themeToggle = document.getElementById('themeToggle');
+const historyBtn = document.getElementById('historyBtn');
+const historyPanel = document.getElementById('historyPanel');
+const historyList = document.getElementById('historyList');
+const clearHistory = document.getElementById('clearHistory');
+const sourceLabel = document.getElementById('sourceLabel');
+const targetLabel = document.getElementById('targetLabel');
 
-    themeToggle.addEventListener('click', () => {
-        body.classList.toggle('dark-mode');
-        const isDark = body.classList.contains('dark-mode');
-        themeToggle.textContent = isDark ? '☀️' : '🌙';
-        localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    });
-
-    // ==================== 2. مفتاح API ====================
-    // تحميل المفتاح المحفوظ
-    const savedKey = localStorage.getItem('google_translate_api_key');
-    if (savedKey) apiKeyInput.value = savedKey;
-
-    apiBtn.addEventListener('click', () => apiModal.classList.remove('hidden'));
-    closeApi.addEventListener('click', () => apiModal.classList.add('hidden'));
-    
-    saveApiBtn.addEventListener('click', () => {
-        localStorage.setItem('google_translate_api_key', apiKeyInput.value.trim());
-        alert('تم حفظ مفتاح API بنجاح!');
-        apiModal.classList.add('hidden');
-    });
-
-    // ==================== 3. تبديل اللغات (أكثر من 100 لغة) ====================
-    // قائمة مبسطة لأشهر اللغات (يمكنك توسيعها برمجياً)
-    const languages = [
-        { code: 'ar', name: 'العربية' }, { code: 'en', name: 'الإنجليزية' },
-        { code: 'fr', name: 'الفرنسية' }, { code: 'es', name: 'الإسبانية' },
-        { code: 'de', name: 'الألمانية' }, { code: 'zh', name: 'الصينية' },
-        { code: 'ja', name: 'اليابانية' }, { code: 'ru', name: 'الروسية' },
-        { code: 'tr', name: 'التركية' }, { code: 'it', name: 'الإيطالية' },
-        { code: 'pt', name: 'البرتغالية' }, { code: 'hi', name: 'الهندية' },
-        { code: 'ko', name: 'الكورية' }, { code: 'nl', name: 'الهولندية' },
-        { code: 'pl', name: 'البولندية' }, { code: 'sv', name: 'السويدية' },
-        // ... أضف المزيد حسب الحاجة
-    ];
-
-    function populateLanguages() {
-        languages.forEach(lang => {
-            const opt1 = new Option(lang.name, lang.code);
-            const opt2 = new Option(lang.name, lang.code);
-            sourceLang.add(opt1);
-            targetLang.add(opt2);
-        });
-        // تعيين القيم الافتراضية
-        sourceLang.value = 'auto'; // خيار الكشف التلقائي
-        targetLang.value = 'en';
-    }
-    populateLanguages();
-
-    swapLang.addEventListener('click', () => {
-        if (sourceLang.value === 'auto') {
-            alert('لا يمكن تبديل الكشف التلقائي. الرجاء اختيار لغة محددة.');
-            return;
-        }
-        const temp = sourceLang.value;
-        sourceLang.value = targetLang.value;
-        targetLang.value = temp;
-    });
-
-    // ==================== 4. استيراد الملفات ====================
-    fileInput.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-        
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            inputText.value = event.target.result;
-        };
-        reader.readAsText(file);
-        // ملاحظة: لملفات PDF/Docx تحتاج لمكتبات خارجية مثل pdf.js
-    });
-
-    // ==================== 5. الترجمة الصوتية ====================
-    let recognition;
-    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        recognition = new SpeechRecognition();
-        recognition.continuous = false;
-        recognition.interimResults = false;
-
-        voiceBtn.addEventListener('click', () => {
-            if (voiceBtn.classList.contains('listening')) {
-                recognition.stop();
-                return;
-            }
-            // تحديد لغة التعرف بناءً على اللغة المصدر
-            recognition.lang = sourceLang.value === 'auto' ? 'ar-SA' : sourceLang.value;
-            recognition.start();
-            voiceBtn.classList.add('listening');
-            voiceBtn.textContent = '🔴 جاري الاستماع...';
-        });
-
-        recognition.onresult = (event) => {
-            const transcript = event.results[0][0].transcript;
-            inputText.value += transcript;
-        };
-
-        recognition.onend = () => {
-            voiceBtn.classList.remove('listening');
-            voiceBtn.textContent = '🎤 صوت';
-        };
-        
-        recognition.onerror = () => {
-            voiceBtn.classList.remove('listening');
-            voiceBtn.textContent = '🎤 صوت';
-        };
-    } else {
-        voiceBtn.disabled = true;
-        voiceBtn.title = 'المتصفح لا يدعم التعرف على الصوت';
-    }
-
-    // ==================== 6. وظيفة الترجمة (محاكاة) ====================
-    // ملاحظة: هنا تحتاج لاستدعاء API حقيقي. الكود التالي يوضح المنطق فقط.
-    translateBtn.addEventListener('click', async () => {
-        const text = inputText.value.trim();
-        if (!text) return alert('الرجاء إدخال نص للترجمة');
-        
-        const apiKey = localStorage.getItem('google_translate_api_key');
-        if (!apiKey) {
-            alert('الرجاء إدخال مفتاح API أولاً من زر المفتاح 🔑');
-            return;
-        }
-
-        translateBtn.textContent = 'جاري الترجمة...';
-        translateBtn.disabled = true;
-
-        try {
-            // مثال حقيقي (يتطلب تفعيل Cloud Translation API في Google Cloud):
-            /*
-            const response = await fetch(`https://translation.googleapis.com/language/translate/v2?key=${apiKey}`, {
-                method: 'POST',
-                body: JSON.stringify({
-                    q: text,
-                    target: targetLang.value,
-                    source: sourceLang.value === 'auto' ? undefined : sourceLang.value,
-                    format: 'text'
-                })
-            });
-            const data = await response.json();
-            const translated = data.data.translations[0].translatedText;
-            */
-            
-            // محاكاة الترجمة للعرض (استبدلها بالكود أعلاه)
-            await new Promise(r => setTimeout(r, 800)); 
-            const translated = `[ترجمة تجريبية] ${text.split(' ').reverse().join(' ')}`;
-            
-            outputText.value = translated;
-            
-            // إضافة إلى السجل
-            addToHistory(text, translated);
-            
-        } catch (error) {
-            alert('حدث خطأ أثناء الترجمة: ' + error.message);
-        } finally {
-            translateBtn.textContent = 'ترجم الآن';
-            translateBtn.disabled = false;
+// ========== تحميل اللغات ==========
+function loadLanguages() {
+    Object.entries(languages).forEach(([code, name]) => {
+        if (code !== 'auto') {
+            sourceLang.innerHTML += `<option value="${code}">${name}</option>`;
+            targetLang.innerHTML += `<option value="${code}">${name}</option>`;
         }
     });
+    sourceLang.value = 'ar';
+    targetLang.value = 'en';
+}
 
-    // ==================== 7. الإعدادات (رقم الإصدار) ====================
-    const APP_VERSION = 'v1.2.0'; // يمكنك تغييره هنا
-    versionDisplay.textContent = APP_VERSION;
-
-    settingsBtn.addEventListener('click', () => settingsModal.classList.remove('hidden'));
-    closeSettings.addEventListener('click', () => settingsModal.classList.add('hidden'));
-
-    // ==================== 8. مسح السجل ====================
-    function addToHistory(original, translated) {
-        const li = document.createElement('li');
-        const shortOrig = original.length > 30 ? original.substring(0, 30) + '...' : original;
-        li.textContent = `${shortOrig} ➔ ${translated}`;
-        historyList.prepend(li);
-        // حفظ في التخزين المحلي
-        saveHistoryToStorage();
+// ========== الترجمة ==========
+async function translateText() {
+    const text = sourceText.value.trim();
+    if (!text) {
+        showToast('⚠️ الرجاء إدخال نص للترجمة');
+        sourceText.focus();
+        return;
     }
 
-    function saveHistoryToStorage() {
-        const items = Array.from(historyList.children).map(li => li.textContent);
-        localStorage.setItem('translation_history', JSON.stringify(items));
+    const from = sourceLang.value;
+    const to = targetLang.value;
+
+    if (from === to && from !== 'auto') {
+        showToast('⚠️ اللغتان متطابقتان');
+        return;
     }
 
-    function loadHistoryFromStorage() {
-        const saved = localStorage.getItem('translation_history');
-        if (saved) {
-            const items = JSON.parse(saved);
-            items.forEach(item => {
-                const li = document.createElement('li');
-                li.textContent = item;
-                historyList.appendChild(li);
-            });
+    setStatus('جاري الترجمة...', 'loading');
+    translateBtn.disabled = true;
+    translateBtn.innerHTML = '<span class="loading-spinner"></span> جاري الترجمة...';
+
+    try {
+        let translated = await translateWithFallback(text, from, to);
+        targetText.value = translated;
+        setStatus('✓ تمت الترجمة بنجاح', 'success');
+        saveToHistory(text, translated, from, to);
+        showToast('✅ تمت الترجمة بنجاح');
+    } catch (error) {
+        console.error(error);
+        setStatus('✗ فشلت الترجمة', 'error');
+        showToast('❌ حدث خطأ، جرب مرة أخرى');
+    } finally {
+        translateBtn.disabled = false;
+        translateBtn.innerHTML = '<i class="fas fa-language"></i> ترجم الآن';
+    }
+}
+
+// ========== دوال API ==========
+async function translateWithFallback(text, from, to) {
+    // المحاولة 1: MyMemory API (مجاني بدون مفتاح)
+    try {
+        const src = from === 'auto' ? 'auto' : from;
+        const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${src}|${to}`;
+        const res = await fetch(url);
+        const data = await res.json();
+        if (data.responseData && data.responseData.translatedText) {
+            const result = data.responseData.translatedText;
+            if (!result.toLowerCase().includes('mymemory')) return result;
         }
-    }
-    loadHistoryFromStorage();
-
-    clearHistoryBtn.addEventListener('click', () => {
-        if (confirm('هل أنت متأكد من مسح السجل بالكامل؟')) {
-            historyList.innerHTML = '';
-            localStorage.removeItem('translation_history');
-        }
-    });
-
-    // إغلاق النوافذ المنبثقة عند النقر خارجها
-    window.addEventListener('click', (e) => {
-        if (e.target === apiModal) apiModal.classList.add('hidden');
-        if (e.target === settingsModal) settingsModal.classList.add('hidden');
-    });
-});
+    } catch (e) { console.warn('MyMemory failed:', e); }
