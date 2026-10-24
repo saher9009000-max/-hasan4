@@ -11,15 +11,10 @@
 </head>
 <body>
 
-    <!-- شريط التنقل -->
     <nav class="navbar">
         <div class="nav-container">
-            <div class="logo">
-                <i class="fas fa-language"></i>
-                <span>Lingua<strong>AI</strong></span>
-            </div>
+            <div class="logo"><i class="fas fa-language"></i><span>Lingua<strong>AI</strong></span></div>
             <div class="nav-actions">
-                <!-- زر الثيمات -->
                 <div class="color-picker">
                     <button class="theme-btn" title="تغيير الألوان"><i class="fas fa-palette"></i></button>
                     <div class="color-options">
@@ -29,40 +24,32 @@
                         <div class="color-circle" data-color="orange" style="background: #f59e0b;"></div>
                     </div>
                 </div>
-                <!-- زر الإعدادات (ثلاث نقاط) -->
-                <button class="theme-btn" id="settingsBtn" title="الإعدادات"><i class="fas fa-ellipsis-v"></i></button>
-                <!-- زر الوضع الليلي -->
                 <button class="theme-btn" id="themeToggle" title="الوضع الليلي"><i class="fas fa-moon"></i></button>
+                <button class="theme-btn" id="settingsBtn" title="الإعدادات"><i class="fas fa-ellipsis-v"></i></button>
             </div>
         </div>
     </nav>
 
-    <!-- القسم الرئيسي -->
     <header class="hero">
         <h1>ترجم أي لغة <span class="gradient-text">بذكاء اصطناعي</span></h1>
-        <p>مترجم فوري احترافي يدعم النماذج المخصصة والترجمة الفورية.</p>
+        <p>مترجم فوري احترافي يدعم الترجمة النصية، الصوتية، واستيراد الملفات مجاناً.</p>
     </header>
 
-    <!-- قسم المترجم -->
     <section class="translator-section">
         <div class="translator-container">
-            
-            <!-- اختيار اللغات -->
             <div class="lang-bar">
                 <div class="lang-select">
                     <label>من</label>
                     <select id="sourceLang"><option value="auto">🔍 اكتشاف تلقائي</option></select>
                 </div>
-                <button class="swap-btn" id="swapBtn" title="تبديل اللغات"><i class="fas fa-exchange-alt"></i></button>
+                <button class="swap-btn" id="swapBtn"><i class="fas fa-exchange-alt"></i></button>
                 <div class="lang-select">
                     <label>إلى</label>
                     <select id="targetLang"><option value="ar">🇸🇦 العربية</option></select>
                 </div>
             </div>
 
-            <!-- صناديق النص -->
             <div class="boxes-container">
-                <!-- صندوق الإدخال -->
                 <div class="box">
                     <div class="box-header">
                         <span>النص الأصلي</span>
@@ -71,117 +58,128 @@
                                 <i class="fas fa-file-import"></i>
                                 <input type="file" id="fileInput" accept=".txt" hidden>
                             </label>
-                            <button class="icon-btn" id="clearBtn" title="مسح"><i class="fas fa-trash"></i></button>
+                            <button class="icon-btn" id="clearBtn"><i class="fas fa-trash"></i></button>
                         </div>
                     </div>
                     <textarea id="sourceText" placeholder="اكتب هنا أو استخدم الميكروفون..."></textarea>
                     <div class="box-footer">
-                        <button class="icon-btn voice-btn" id="voiceBtn" title="ترجمة صوتية"><i class="fas fa-microphone"></i></button>
-                        <button class="icon-btn" id="speakSource" title="استماع للنص"><i class="fas fa-volume-up"></i></button>
+                        <button class="icon-btn voice-btn" id="voiceBtn"><i class="fas fa-microphone"></i></button>
+                        <button class="icon-btn" id="speakSource"><i class="fas fa-volume-up"></i></button>
                         <span class="char-count"><span id="charCount">0</span>/5000</span>
                     </div>
                 </div>
 
-                <!-- صندوق الإخراج -->
                 <div class="box output-box">
                     <div class="box-header">
-                        <span>الترجمة (<span id="currentModelBadge">الافتراضي</span>)</span>
+                        <span>الترجمة</span>
                         <div class="tools">
-                            <button class="icon-btn" id="copyBtn" title="نسخ"><i class="fas fa-copy"></i></button>
+                            <button class="icon-btn" id="copyBtn"><i class="fas fa-copy"></i></button>
                         </div>
                     </div>
                     <textarea id="targetText" placeholder="ستظهر الترجمة هنا..." readonly></textarea>
                     <div class="box-footer">
-                        <button class="icon-btn" id="speakTarget" title="استماع للترجمة"><i class="fas fa-volume-up"></i></button>
+                        <button class="icon-btn" id="speakTarget"><i class="fas fa-volume-up"></i></button>
                         <span class="status" id="status"></span>
                     </div>
                 </div>
             </div>
 
-            <!-- أزرار النماذج الجديدة -->
-            <div class="models-bar" style="display: flex; gap: 10px; margin-bottom: 1.5rem;">
-                <button class="main-btn secondary" id="modelsBtn" style="flex:1;">
-                    <i class="fas fa-cubes"></i> النماذج المتاحة
-                </button>
-                <button class="main-btn secondary" id="refreshModelsBtn" style="flex:1;">
-                    <i class="fas fa-sync-alt"></i> تحديث النماذج
-                </button>
+            <div class="ai-toggle-container">
+                <label class="switch">
+                    <input type="checkbox" id="aiToggle">
+                    <span class="slider round"></span>
+                </label>
+                <span class="ai-label"><i class="fas fa-brain"></i> استخدام الـ API المخصص (ذكاء اصطناعي)</span>
+                <button class="model-btn" id="modelsBtn"><i class="fas fa-robot"></i> النماذج</button>
             </div>
 
-            <!-- أزرار التحكم الرئيسية -->
             <div class="main-actions">
-                <button class="main-btn" id="translateBtn">
-                    <i class="fas fa-language"></i> ترجم الآن
-                </button>
-                <button class="main-btn secondary" id="historyBtn">
-                    <i class="fas fa-history"></i> السجل
-                </button>
+                <button class="main-btn" id="translateBtn"><i class="fas fa-language"></i> ترجم الآن</button>
+                <button class="main-btn secondary" id="historyBtn"><i class="fas fa-history"></i> السجل</button>
             </div>
-
         </div>
     </section>
-
-    <!-- نافذة النماذج -->
-    <div class="modal" id="modelsModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><i class="fas fa-cubes"></i> اختر نموذج الترجمة</h3>
-                <button class="icon-btn close-btn"><i class="fas fa-times"></i></button>
-            </div>
-            <div class="modal-body" id="modelsList">
-                <p class="empty-msg">جاري تحميل النماذج أو أخلِ بيانات الـ API في الإعدادات...</p>
-            </div>
-        </div>
-    </div>
 
     <!-- نافذة السجل -->
     <div class="modal" id="historyModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3><i class="fas fa-history"></i> سجل الترجمات</h3>
+                <h3><i class="fas fa-history"></i> السجل</h3>
                 <div>
-                    <button class="icon-btn" id="clearHistoryBtn" title="مسح الكل"><i class="fas fa-trash"></i></button>
+                    <button class="icon-btn" id="clearHistoryBtn"><i class="fas fa-trash"></i></button>
                     <button class="icon-btn close-btn"><i class="fas fa-times"></i></button>
                 </div>
             </div>
-            <div class="modal-body" id="historyList">
-                <p class="empty-msg">لا توجد ترجمات سابقة.</p>
-            </div>
+            <div class="modal-body" id="historyList"><p class="empty-msg">لا توجد ترجمات سابقة.</p></div>
         </div>
     </div>
 
-    <!-- نافذة الإعدادات (ثلاث نقاط) -->
+    <!-- نافذة الإعدادات -->
     <div class="modal" id="settingsModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3><i class="fas fa-cog"></i> إعدادات الاتصال والـ API</h3>
+                <h3><i class="fas fa-cog"></i> الإعدادات</h3>
                 <button class="icon-btn close-btn"><i class="fas fa-times"></i></button>
             </div>
             <div class="modal-body">
-                <div class="setting-group" style="margin-bottom: 15px;">
-                    <label style="display:block; font-weight:700; margin-bottom:5px;">مفتاح الـ API (الصق هنا):</label>
-                    <input type="password" id="apiKeyInput" placeholder="أدخل أو الصق مفتاح الـ API هنا..." style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--border); background:var(--bg); color:var(--text);">
+                <div class="setting-item"><strong>الإصدار:</strong> <span>v5.0 (AI Ready)</span></div>
+                <div class="setting-item"><strong>النسخة:</strong> <span class="badge">مجانية</span></div>
+                
+                <hr style="margin: 15px 0; border: 0; border-top: 1px solid var(--border);">
+                <h4 style="margin-bottom: 10px;"><i class="fas fa-plug"></i> إعدادات API</h4>
+                
+                <div class="input-group">
+                    <label>رابط API الأساسي (Base URL):</label>
+                    <input type="text" id="apiEndpoint" placeholder="https://api.groq.com/openai/v1" value="https://api.groq.com/openai/v1">
+                    <small style="color:var(--text-muted); font-size:0.75rem;">ضع الرابط الأساسي فقط (بدون /chat/completions)</small>
                 </div>
-                <div class="setting-group" style="margin-bottom: 15px;">
-                    <label style="display:block; font-weight:700; margin-bottom:5px;">رابط المفتاح / Endpoint URL:</label>
-                    <input type="text" id="apiUrlInput" placeholder="https://api.example.com/v1" style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--border); background:var(--bg); color:var(--text);">
+                
+                <div class="input-group">
+                    <label>مفتاح API:</label>
+                    <div class="key-input-wrapper">
+                        <input type="password" id="apiKey" placeholder="sk-...">
+                        <button class="icon-btn" id="pasteKeyBtn" title="لصق"><i class="fas fa-paste"></i></button>
+                    </div>
                 </div>
-                <div class="setting-group" style="margin-bottom: 15px;">
-                    <label style="display:block; font-weight:700; margin-bottom:5px;">نوع اتصال الشبكة:</label>
-                    <select id="connectionSelect" style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--border); background:var(--bg); color:var(--text);">
-                        <option value="direct">اتصال مباشر (Direct REST)</option>
-                        <option value="proxy">عبر وكيل (Proxy)</option>
-                        <option value="secure">اتصال آمن مخصص (Secure SSL)</option>
-                    </select>
+
+                <button class="main-btn" id="testConnectionBtn" style="padding: 10px; font-size: 0.9rem; margin-top: 10px;">
+                    <i class="fas fa-wifi"></i> اختبار الاتصال
+                </button>
+
+                <hr style="margin: 15px 0; border: 0; border-top: 1px solid var(--border);">
+                <div class="setting-item">
+                    <strong>وضع تجربة المستخدم:</strong>
+                    <label class="switch small">
+                        <input type="checkbox" id="uxModeToggle">
+                        <span class="slider round"></span>
+                    </label>
                 </div>
-                <button class="main-btn" id="saveSettingsBtn" style="width:100%; margin-top:10px;">حفظ الإعدادات</button>
             </div>
         </div>
     </div>
 
-    <!-- إشعارات -->
-    <div class="toast" id="toast">رسالة</div>
+    <!-- نافذة النماذج -->
+    <div class="modal" id="modelsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-robot"></i> النماذج المتاحة</h3>
+                <div>
+                    <button class="icon-btn" id="refreshModelsBtn"><i class="fas fa-sync"></i></button>
+                    <button class="icon-btn close-btn"><i class="fas fa-times"></i></button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 0.9rem; margin-bottom: 15px;">
+                    النموذج الحالي: <strong id="currentModelName" style="color:var(--primary)">لم يتم اختيار نموذج</strong>
+                </p>
+                <div id="modelsList" class="models-list">
+                    <p class="empty-msg">اضغط على أيقونة التحديث لجلب النماذج.</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <div class="toast" id="toast">رسالة</div>
     <script src="script.js"></script>
 </body>
 </html>
