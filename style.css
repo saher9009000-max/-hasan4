@@ -98,9 +98,11 @@ textarea { width: 100%; min-height: 180px; padding: 1rem; border: none; backgrou
 .status.error { color: #ef4444; }
 
 /* المفاتيح (Switches) */
-.ai-toggle-container { display: flex; align-items: center; gap: 10px; margin-bottom: 1.5rem; background: var(--bg); padding: 10px 15px; border-radius: 10px; border: 1px solid var(--border); }
+.ai-toggle-container { display: flex; align-items: center; gap: 10px; margin-bottom: 1.5rem; background: var(--bg); padding: 10px 15px; border-radius: 10px; border: 1px solid var(--border); flex-wrap: wrap; }
 .ai-label { font-size: 0.9rem; font-weight: 700; display: flex; align-items: center; gap: 5px; color: var(--text); }
 .ai-label i { color: var(--primary); }
+.model-btn { margin-right: auto; background: transparent; border: 1px solid var(--primary); color: var(--primary); padding: 5px 15px; border-radius: 8px; font-family: 'Cairo', sans-serif; font-weight: 700; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 5px; }
+.model-btn:hover { background: var(--primary); color: white; }
 
 .switch { position: relative; display: inline-block; width: 46px; height: 26px; }
 .switch.small { width: 40px; height: 22px; }
@@ -125,9 +127,18 @@ input:checked + .slider:before { transform: translateX(20px); }
 /* النوافذ المنبثقة (Modals) */
 .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; padding: 1rem; }
 .modal.show { display: flex; }
-.modal-content { background: var(--card-bg); border-radius: var(--radius); width: 100%; max-width: 500px; box-shadow: var(--shadow); display: flex; flex-direction: column; max-height: 80vh; }
+.modal-content { background: var(--card-bg); border-radius: var(--radius); width: 100%; max-width: 500px; box-shadow: var(--shadow); display: flex; flex-direction: column; max-height: 85vh; }
 .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; border-bottom: 1px solid var(--border); }
 .modal-body { padding: 1.5rem; overflow-y: auto; }
+
+/* إعدادات الـ API */
+.input-group { margin-bottom: 15px; }
+.input-group label { display: block; font-size: 0.9rem; margin-bottom: 5px; font-weight: 700; }
+.input-group input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-family: 'Cairo', sans-serif; outline: none; }
+.input-group input:focus { border-color: var(--primary); }
+.key-input-wrapper { display: flex; gap: 5px; }
+.key-input-wrapper input { flex: 1; }
+.key-input-wrapper .icon-btn { background: var(--border); border: 1px solid var(--border); height: auto; width: 40px; }
 
 /* السجل */
 .history-item { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; margin-bottom: 10px; cursor: pointer; transition: 0.2s; }
@@ -136,6 +147,15 @@ input:checked + .slider:before { transform: translateX(20px); }
 .h-source { font-size: 0.9rem; margin-bottom: 5px; }
 .h-target { font-size: 0.9rem; color: var(--text-muted); }
 .empty-msg { text-align: center; color: var(--text-muted); }
+
+/* النماذج */
+.models-list { display: flex; flex-direction: column; gap: 10px; }
+.model-item { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; cursor: pointer; transition: 0.2s; display: flex; justify-content: space-between; align-items: center; }
+.model-item:hover { border-color: var(--primary); }
+.model-item.selected { border-color: var(--primary); background: rgba(99,102,241,0.1); }
+.model-item .m-name { font-weight: 700; font-size: 0.95rem; }
+.model-item .m-check { color: var(--primary); display: none; }
+.model-item.selected .m-check { display: block; }
 
 /* الإعدادات */
 .setting-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 1rem; }
@@ -155,4 +175,5 @@ input:checked + .slider:before { transform: translateX(20px); }
     .hero h1 { font-size: 1.8rem; }
     .main-actions { flex-direction: column; }
     .main-btn.secondary { flex: 1; }
+    .model-btn { margin-right: 0; width: 100%; justify-content: center; margin-top: 10px; }
 }
