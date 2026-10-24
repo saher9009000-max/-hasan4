@@ -3,89 +3,196 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> ترجمة برو  Professional Translator</title>
+    <title>LinguaAI - مترجم ذكي احترافي</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-
-    <!-- شريط الأدوات العلوي -->
-    <header class="toolbar">
-        <!-- 1. زر الوضع الداكن -->
-        <button id="themeToggle" class="icon-btn" title="تبديل الوضع الداكن">🌙</button>
-        
-        <!-- 2. زر القائمة API -->
-        <button id="apiBtn" class="icon-btn" title="إعداد مفتاح API">🔑</button>
-        
-        <!-- 7. زر الإعدادات (الإصدار) -->
-        <button id="settingsBtn" class="icon-btn" title="الإعدادات">⚙️</button>
-        
-        <!-- 8. زر مسح السجل -->
-        <button id="clearHistoryBtn" class="text-btn" title="مسح سجل الترجمة">🗑️ مسح السجل</button>
-    </header>
-
-    <!-- منطقة الترجمة الرئيسية -->
-    <main class="container">
-        <!-- 3. تبديل اللغات -->
-        <div class="lang-selector">
-            <select id="sourceLang">
-                <option value="auto">كشف تلقائي</option>
-                <!-- سيتم تعبئتها بواسطة JavaScript (أكثر من 100 لغة) -->
-            </select>
-            <button id="swapLang" class="swap-btn" title="تبديل اللغات">⇄</button>
-            <select id="targetLang">
-                <option value="ar">العربية</option>
-            </select>
+    <!-- شريط التنقل -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-language"></i>
+                <span>Lingua<strong>AI</strong></span>
+            </div>
+            <div class="nav-links">
+                <a href="#translator" class="active"><i class="fas fa-exchange-alt"></i> المترجم</a>
+                <a href="#features"><i class="fas fa-star"></i> المميزات</a>
+                <a href="#about"><i class="fas fa-info-circle"></i> عن الموقع</a>
+            </div>
+            <button class="theme-toggle" id="themeToggle" title="تبديل الوضع">
+                <i class="fas fa-moon"></i>
+            </button>
         </div>
+    </nav>
 
-        <!-- صندوق الإدخال -->
-        <div class="input-area">
-            <textarea id="inputText" placeholder="أدخل النص هنا..."></textarea>
-            
-            <!-- 4. زر استيراد الملفات + 5. زر الترجمة الصوتية -->
-            <div class="action-bar">
-                <label for="fileInput" class="file-label" title="استيراد ملف">📁 استيراد ملف</label>
-                <input type="file" id="fileInput" accept=".txt,.pdf,.docx" hidden>
-                
-                <button id="voiceBtn" class="mic-btn" title="الترجمة الصوتية">🎤 صوت</button>
+    <!-- القسم الرئيسي -->
+    <header class="hero">
+        <div class="hero-content">
+            <h1>ترجم أي لغة <span class="gradient-text">بذكاء اصطناعي</span></h1>
+            <p>مترجم احترافي يدعم أكثر من 100 لغة، ترجمة فورية، نطق صوتي، ونسخ سهل</p>
+            <div class="hero-stats">
+                <div class="stat"><strong>100+</strong><span>لغة</span></div>
+                <div class="stat"><strong>فوري</strong><span>ترجمة</span></div>
+                <div class="stat"><strong>مجاني</strong><span>بالكامل</span></div>
             </div>
         </div>
+        <div class="hero-bg"></div>
+    </header>
 
-        <!-- نتيجة الترجمة -->
-        <div class="output-area">
-            <textarea id="outputText" readonly placeholder="الترجمة تظهر هنا..."></textarea>
+    <!-- المترجم -->
+    <section class="translator-section" id="translator">
+        <div class="translator-container">
+            <!-- شريط اختيار اللغات -->
+            <div class="lang-bar">
+                <div class="lang-select-wrapper">
+                    <label>من</label>
+                    <select id="sourceLang" class="lang-select">
+                        <option value="auto">🔍 اكتشاف تلقائي</option>
+                    </select>
+                </div>
+                <button class="swap-btn" id="swapBtn" title="تبديل اللغات">
+                    <i class="fas fa-right-left"></i>
+                </button>
+                <div class="lang-select-wrapper">
+                    <label>إلى</label>
+                    <select id="targetLang" class="lang-select">
+                        <option value="ar">🇸🇦 العربية</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- صناديق الترجمة -->
+            <div class="translate-boxes">
+                <!-- صندوق الإدخال -->
+                <div class="translate-box">
+                    <div class="box-header">
+                        <span class="box-label" id="sourceLabel">النص الأصلي</span>
+                        <div class="box-actions">
+                            <button class="icon-btn" id="clearBtn" title="مسح">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            <button class="icon-btn" id="pasteBtn" title="لصق">
+                                <i class="fas fa-paste"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <textarea id="sourceText" placeholder="اكتب أو الصق النص هنا..." maxlength="5000"></textarea>
+                    <div class="box-footer">
+                        <div class="footer-left">
+                            <button class="icon-btn speak-btn" id="speakSource" title="استماع">
+                                <i class="fas fa-volume-up"></i>
+                            </button>
+                        </div>
+                        <div class="footer-right">
+                            <span class="char-count"><span id="charCount">0</span>/5000</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- صندوق الإخراج -->
+                <div class="translate-box output-box">
+                    <div class="box-header">
+                        <span class="box-label" id="targetLabel">الترجمة</span>
+                        <div class="box-actions">
+                            <button class="icon-btn" id="copyBtn" title="نسخ">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                            <button class="icon-btn" id="speakTarget" title="استماع">
+                                <i class="fas fa-volume-up"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <textarea id="targetText" placeholder="ستظهر الترجمة هنا..." readonly></textarea>
+                    <div class="box-footer">
+                        <div class="footer-left">
+                            <span class="status" id="status"></span>
+                        </div>
+                        <div class="footer-right">
+                            <button class="icon-btn" id="shareBtn" title="مشاركة">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- أزرار التحكم -->
+            <div class="action-bar">
+                <button class="btn btn-primary" id="translateBtn">
+                    <i class="fas fa-language"></i> ترجم الآن
+                </button>
+                <button class="btn btn-secondary" id="historyBtn">
+                    <i class="fas fa-history"></i> السجل
+                </button>
+            </div>
+
+            <!-- السجل -->
+            <div class="history-panel" id="historyPanel">
+                <div class="history-header">
+                    <h3><i class="fas fa-history"></i> سجل الترجمات</h3>
+                    <button class="icon-btn" id="clearHistory" title="مسح السجل">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+                <div class="history-list" id="historyList">
+                    <p class="empty-history">لا توجد ترجمات سابقة</p>
+                </div>
+            </div>
         </div>
+    </section>
 
-        <!-- زر الترجمة الرئيسي -->
-        <button id="translateBtn" class="primary-btn">ترجم الآن</button>
-
-        <!-- منطقة سجل الترجمة -->
-        <div class="history-section">
-            <h3>سجل الترجمة</h3>
-            <ul id="historyList"></ul>
+    <!-- المميزات -->
+    <section class="features" id="features">
+        <h2 class="section-title">لماذا <span class="gradient-text">LinguaAI</span>؟</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+                <h3>سرعة فائقة</h3>
+                <p>ترجمة فورية بفضل تقنيات الذكاء الاصطناعي المتقدمة</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-shield-halved"></i></div>
+                <h3>خصوصية كاملة</h3>
+                <p>نصوصك لا تُحفظ على خوادمنا، ترجمة آمنة تماماً</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-microphone"></i></div>
+                <h3>نطق صوتي</h3>
+                <p>استمع للترجمة بصوت طبيعي في أي لغة</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-globe"></i></div>
+                <h3>100+ لغة</h3>
+                <p>دعم جميع اللغات العالمية بما فيها لغات أقل شيوعاً</p>
+            </div>
         </div>
-    </main>
+    </section>
 
-    <!-- 7. نافذة الإعدادات (تحتوي على رقم الإصدار) -->
-    <div id="settingsModal" class="modal hidden">
-        <div class="modal-content">
-            <span class="close-btn">&times;</span>
-            <h2>إعدادات النظام</h2>
-            <p>رقم الإصدار: <strong id="versionDisplay">v1.0.0</strong></p>
-            <hr>
-            <p>معلومات المطور: Professional Translator</p>
-            <p>© 2026 جميع الحقوق محفوظة</p>
+    <!-- عن الموقع -->
+    <section class="about" id="about">
+        <div class="about-content">
+            <h2>عن <span class="gradient-text">LinguaAI</span></h2>
+            <p>LinguaAI هو مترجم ذكي احترافي يعتمد على تقنيات الذكاء الاصطناعي الحديثة. يوفر ترجمة دقيقة وسريعة لأكثر من 100 لغة، مع واجهة عصرية سهلة الاستخدام.</p>
+            <p>الموقع يعمل بنسخة مجانية بالكامل باستخدام واجهات API مفتوحة المصدر، مع إمكانية الترقية لاحقاً لاستخدام نماذج AI أكثر تقدماً.</p>
         </div>
-    </div>
+    </section>
 
-    <!-- نافذة إعدادات API (منبثقة) -->
-    <div id="apiModal" class="modal hidden">
-        <div class="modal-content">
-            <span class="close-btn api-close">&times;</span>
-            <h2>إعداد مفتاح API</h2>
-            <input type="password" id="apiKeyInput" placeholder="أدخل مفتاح Google Translate API">
-            <button id="saveApiBtn" class="primary-btn">حفظ المفتاح</button>
+    <!-- الفوتر -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="logo">
+                <i class="fas fa-language"></i>
+                <span>Lingua<strong>AI</strong></span>
+            </div>
+            <p>© 2025 LinguaAI - جميع الحقوق محفوظة</p>
         </div>
-    </div>
+    </footer>
+
+    <!-- إشعار -->
+    <div class="toast" id="toast"></div>
 
     <script src="script.js"></script>
 </body>
