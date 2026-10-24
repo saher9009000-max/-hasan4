@@ -172,4 +172,136 @@ async function loadModels() {
             div.className = `model-item ${id === current ? 'selected' : ''}`;
             div.innerHTML = `<span>${id}</span><i class="fas fa-check m-check"></i>`;
             div.onclick = () => {
-                localStorage.setItem('selectedModel',
+                localStorage.setItem('selectedModel', id);
+                currentModelName.textContent = id;
+                showToast(`تم اختيار: ${id}`);
+                modelsModal.classList.remove('show');
+            };
+            modelsList.appendChild(div);
+        });
+        if (current) currentModelName.textContent = current;
+    } catch (e) {
+        modelsList.innerHTML = '<p class="empty-msg">فشل جلب النماذج. تأكد من الرابط والمفتاح.</p>';
+    }
+}
+
+// دالة الترجمة (مع Fallback)
+async function doTranslate() {
+    const text = sourceText.value.trim();
+    if (!text) { showToast('اكتب نصاً أولاً'); return; }
+    let from = sourceLang.value, to = targetLang.value;
+    if (from === to) { showToast('اللغتان متطابقتان'); return; }
+    if (from === 'auto') from = 'ar';
+
+    statusEl.textContent = 'جاري الترجمة...'; statusEl.className = 'status';
+    translateBtn.disabled = true;
+    const isAI = aiToggle.checked;
+    translateBtn.innerHTML = isAI ? '<i class="fas fa-brain fa-spin"></i> جاري المعالجة...' : '<i class="fas fa-spinner fa-spin"></i> جاري الترجمة...';
+
+    try {
+        let translated = "";
+        if (isAI) {
+            const ep = apiEndpoint.value.trim(), key = apiKey.value.trim();
+            if (!ep || !key) throw new Error('API غير معد');
+            const model = localStorage.getItem('selectedModel') || 'gpt-3.5-turbo';
+            
+            const res = await fetch(ep, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${key}` },
+                body: JSON.stringify({
+                    model: model,
+                    messages: [
+                        { role: "system", content: `Translate from ${from} to ${to}. Return only translation.` },
+                        { role: "user", content: text }
+                    ]
+                })
+            });
+            const data = await res.json();
+            if (data.choices && data.choices[0]) translated = data.choices[0].message.content;
+            else if (data.error) throw new Error(data.error.message);
+            else throw new Error('تنسيق غير معروف');
+        } else {
+            // ترجمة مجانية
+            const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${from}|${to}`);
+            const data = await res.json();
+            if (data.responseData && data.responseData.translatedText) {
+                translated = data.responseData.translatedText;
+                // إذا فشلت الواجهة وأرجعت النص الأصلي أو رسالة تحذير
+                if (translated.includes('MYMEMORY WARNING')) throw new Error('الواجهة المجانية مشغولة');
+            } else {
+                throw new Error('فشل الترجمة');
+            }
+        }
+        targetText.value = translated.trim();
+        statusEl.textContent = 'تمت الترجمة بنجاح';
+        statusEl.classList.add('success');
+        saveToHistory(text, translated.trim(), from, to);
+    } catch (error) {
+        console.error(error);
+        statusEl.textContent = 'حدث خطأ';
+        statusEl.classList.add('error');
+        showToast('فشلت الترجمة: ' + error.message);
+    } finally {
+        translateBtn.disabled = false;
+        translateBtn.innerHTML = '<i class="fas fa-language"></i> ترجم الآن';
+    }
+}
+translateBtn.addEventListener('click', doTranslate);
+
+// السجل
+function saveToHistory(src, tgt, from, to) {
+    let hist = JSON.parse(localStorage.getItem('translationHistory')) || [];
+    hist.unshift({ src, tgt, from, to });
+    if (hist.length > 20) hist.pop();
+    localStorage.setItem('translationHistory', JSON.stringify(hist));
+    renderHistory();
+}
+function renderHistory() {
+    const hist = JSON.parse(localStorage.getItem('translationHistory')) || [];
+    if (!hist.length) { historyList.innerHTML = '<p class="empty-msg">لا توجد ترجمات.</p>'; return; }
+    historyList.innerHTML = hist.map((item, i) => `
+        <div class="history-item" onclick="window.loadHistory(${i})">
+            <div class="h-langs">${languages[item.from] || item.from} ➔ ${languages[item.to] || item.to}</div>
+            <div>${item.src}</div>
+            <div class="h-target">${item.tgt}</div>
+        </div>
+    `).join('');
+}
+window.loadHistory = (i) => {
+    const hist = JSON.parse(localStorage.getItem('translationHistory')) || [];
+    if (hist[i]) {
+        sourceText.value = hist[i].src;
+        targetText.value = hist[i].tgt;
+        charCount.textContent = hist[i].src.length;
+        historyModal.classList.remove('show');
+    }
+};
+clearHistoryBtn.addEventListener('click', () => { localStorage.removeItem('translationHistory'); renderHistory(); });
+
+// فتح/إغلاق النوافذ
+historyBtn.addEventListener('click', () => { renderHistory(); historyModal.classList.add('show'); });
+settingsBtn.addEventListener('click', () => settingsModal.classList.add('show'));
+closeBtns.forEach(b => b.addEventListener('click', () => {
+    historyModal.classList.remove('show');
+    settingsModal.classList.remove('show');
+    modelsModal.classList.remove('show');
+}));
+window.addEventListener('click', e => {
+    if (e.target.classList.contains('modal')) e.target.classList.remove('show');
+});
+
+// وضع تجربة المستخدم
+uxModeToggle.checked = localStorage.getItem('uxMode') === 'true';
+uxModeToggle.addEventListener('change', () => {
+    localStorage.setItem('uxMode', uxModeToggle.checked);
+    showToast(uxModeToggle.checked ? 'تم تفعيل وضع التجربة' : 'تم الإيقاف');
+});
+
+// الإشعارات
+let toastTimer;
+function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 3000);
+}
