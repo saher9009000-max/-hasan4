@@ -286,4 +286,24 @@ uxModeToggle.checked = uxMode;
 uxModeToggle.addEventListener('change', () => {
     localStorage.setItem('uxMode', uxModeToggle.checked);
     if (uxModeToggle.checked) {
-        showToast('تم
+        showToast('تم تفعيل وضع تجربة المستخدم: مرحباً بك! جرب الترجمة الصوتية أو الذكاء الاصطناعي.');
+    } else {
+        showToast('تم إيقاف وضع تجربة المستخدم.');
+    }
+});
+
+// إظهار رسالة ترحيبية إذا كان الوضع مفعل
+if (uxMode) {
+    setTimeout(() => {
+        showToast('👋 مرحباً بك في LinguaAI! جرب تفعيل "الترجمة الذكية" للحصول على نتائج أفضل.');
+    }, 1500);
+}
+
+// 12. الإشعارات
+let toastTimer;
+function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 3000);
+}
