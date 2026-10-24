@@ -1,30 +1,11 @@
 // 1. قاموس اللغات
 const languages = {
-    "🇸🇦 العربية", en: "🇺🇸 الإنجليزية", fr: "🇫🇷 الفرنسية",
-    es: "🇪🇸 الإسبانية", de: "🇩🇪 الألمانية", it: "🇮🇹 الإيطالية", pt: "🇵🇹 البرتغالية",
-    ru: "🇷🇺 الروسية", zh: "🇨🇳 الصينية", ja: "🇯🇵 اليابانية", ko: "🇰🇷 الكورية",
-    tr: "🇹🇷 التركية", hi: "🇮🇳 الهندية", ur: "🇵🇰 الأردية", fa: "🇮🇷 الفارسية",
-    nl: "🇳🇱 الهولندية", pl: "🇵🇱 البولندية", sv: "🇸🇪 السويدية", el: "🇬🇷 اليونانية",
-    he: "🇮🇱 العبرية", th: "🇹🇭 التايلاندية", vi: "🇻🇳 الفيتنامية", id: "🇮🇩 الإندونيسية"
-const languages = {
     auto: "🔍 اكتشاف تلقائي", ar: "🇸🇦 العربية", en: "🇺🇸 الإنجليزية", fr: "🇫🇷 الفرنسية",
     es: "🇪🇸 الإسبانية", de: "🇩🇪 الألمانية", it: "🇮🇹 الإيطالية", pt: "🇵🇹 البرتغالية",
     ru: "🇷🇺 الروسية", zh: "🇨🇳 الصينية", ja: "🇯🇵 اليابانية", ko: "🇰🇷 الكورية",
     tr: "🇹🇷 التركية", hi: "🇮🇳 الهندية", ur: "🇵🇰 الأردية", fa: "🇮🇷 الفارسية",
     nl: "🇳🇱 الهولندية", pl: "🇵🇱 البولندية", sv: "🇸🇪 السويدية", el: "🇬🇷 اليونانية",
-    he: "🇮🇱 العبرية", th: "🇹🇭 التايلاندية", vi: "🇻🇳 الفيتنامية", id: "🇮🇩 الإندونيسية",
-    ms: "🇲🇾 الماليزية", uk: "🇺🇦 الأوكرانية", cs: "🇨🇿 التشيكية", ro: "🇷🇴 الرومانية",
-    hu: "🇭🇺 المجرية", bg: "🇧🇬 البلغارية", sk: "🇸🇰 السلوفاكية", hr: "🇭🇷 الكرواتية",
-    sr: "🇷🇸 الصربية", sl: "🇸🇮 السلوفينية", et: "🇪🇪 الإستونية", lv: "🇱🇻 اللاتفية",
-    lt: "🇱🇹 الليتوانية", mt: "🇲🇹 المالطية", ga: "🇮🇪 الأيرلندية", cy: "🏴 الويلزية",
-    ca: "🏴 الكتالونية", eu: "🏴 الباسكية", gl: "🏴 الجاليكية", af: "🇿🇦 الأفريكانية",
-    sw: "🇰🇪 السواحيلية", am: "🇪🇹 الأمهرية", bn: "🇧🇩 البنغالية", ta: "🇮🇳 التاميلية",
-    te: "🇮🇳 التيلوغوية", ml: "🇮🇳 المالايالامية", kn: "🇮🇳 الكانادية", gu: "🇮🇳 الغوجاراتية",
-    mr: "🇮🇳 الماراثية", pa: "🇮🇳 البنجابية", ne: "🇳🇵 النيبالية", si: "🇱🇰 السنهالية",
-    km: "🇰🇭 الخميرية", lo: "🇱🇦 اللاوية", my: "🇲🇲 البورمية", ka: "🇬🇪 الجورجية",
-    hy: "🇦🇲 الأرمينية", az: "🇦🇿 الأذربيجانية", kk: "🇰🇿 الكازاخية", uz: "🇺🇿 الأوزبكية",
-    mn: "🇲🇳 المنغولية", sq: "🇦🇱 الألبانية", mk: "🇲🇰 المقدونية", bs: "🇧🇦 البوسنية",
-    is: "🇮🇸 الأيسلندية", lb: "🇱🇺 اللوكسمبورغية"
+    he: "🇮🇱 العبرية", th: "🇹🇭 التايلاندية", vi: "🇻🇳 الفيتنامية", id: "🇮🇩 الإندونيسية"
 };
 
 // 2. عناصر DOM
@@ -46,7 +27,7 @@ const themeToggle = document.getElementById('themeToggle');
 const toast = document.getElementById('toast');
 const aiToggle = document.getElementById('aiToggle');
 
-// السجل والإعدادات
+// السجل والإعدادات والنماذج
 const historyBtn = document.getElementById('historyBtn');
 const historyModal = document.getElementById('historyModal');
 const historyList = document.getElementById('historyList');
@@ -54,6 +35,18 @@ const clearHistoryBtn = document.getElementById('clearHistoryBtn');
 const settingsBtn = document.getElementById('settingsBtn');
 const settingsModal = document.getElementById('settingsModal');
 const uxModeToggle = document.getElementById('uxModeToggle');
+const apiEndpoint = document.getElementById('apiEndpoint');
+const apiKey = document.getElementById('apiKey');
+const pasteKeyBtn = document.getElementById('pasteKeyBtn');
+const testConnectionBtn = document.getElementById('testConnectionBtn');
+
+// النماذج
+const modelsBtn = document.getElementById('modelsBtn');
+const modelsModal = document.getElementById('modelsModal');
+const modelsList = document.getElementById('modelsList');
+const refreshModelsBtn = document.getElementById('refreshModelsBtn');
+const currentModelName = document.getElementById('currentModelName');
+
 const closeBtns = document.querySelectorAll('.close-btn');
 
 // 3. تعبئة اللغات
@@ -69,8 +62,7 @@ function populateLanguages() {
 }
 populateLanguages();
 
-// 4. نظام الثيمات (الألوان والوضع الليلي)
-// الوضع الليلي
+// 4. نظام الثيمات
 themeToggle.addEventListener('click', () => {
     const isDark = document.body.getAttribute('data-theme') === 'dark';
     if (isDark) {
@@ -88,7 +80,6 @@ if (localStorage.getItem('theme') === 'dark') {
     themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
 }
 
-// تغيير الألوان
 document.querySelectorAll('.color-circle').forEach(circle => {
     circle.addEventListener('click', () => {
         const color = circle.getAttribute('data-color');
@@ -142,7 +133,7 @@ copyBtn.addEventListener('click', () => {
     showToast('تم النسخ!');
 });
 
-// 7. الترجمة الصوتية (الميكروفون)
+// 7. الترجمة الصوتية
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 let recognition;
 if (SpeechRecognition) {
@@ -173,7 +164,7 @@ if (SpeechRecognition) {
     voiceBtn.style.display = 'none';
 }
 
-// 8. الاستماع (Text to Speech)
+// 8. الاستماع
 function speak(text, lang) {
     if (!text) return;
     const utterance = new SpeechSynthesisUtterance(text);
@@ -183,7 +174,146 @@ function speak(text, lang) {
 speakSource.addEventListener('click', () => speak(sourceText.value, sourceLang.value === 'auto' ? 'ar' : sourceLang.value));
 speakTarget.addEventListener('click', () => speak(targetText.value, targetLang.value));
 
-// 9. دالة الترجمة (تدعم الذكاء الاصطناعي)
+// ========== 9. إعدادات API والنماذج ==========
+
+// حفظ واسترجاع إعدادات الـ API
+if (localStorage.getItem('apiEndpoint')) apiEndpoint.value = localStorage.getItem('apiEndpoint');
+if (localStorage.getItem('apiKey')) apiKey.value = localStorage.getItem('apiKey');
+
+apiEndpoint.addEventListener('change', () => localStorage.setItem('apiEndpoint', apiEndpoint.value));
+apiKey.addEventListener('change', () => localStorage.setItem('apiKey', apiKey.value));
+
+// لصق المفتاح بسهولة
+pasteKeyBtn.addEventListener('click', async () => {
+    try {
+        const text = await navigator.clipboard.readText();
+        apiKey.value = text;
+        localStorage.setItem('apiKey', text);
+        showToast('تم لصق المفتاح بنجاح');
+    } catch (err) {
+        showToast('فشل اللصق، يرجى اللصق يدوياً');
+    }
+});
+
+// اختبار الاتصال بالـ API
+testConnectionBtn.addEventListener('click', async () => {
+    const endpoint = apiEndpoint.value.trim();
+    const key = apiKey.value.trim();
+
+    if (!endpoint || !key) {
+        showToast('يرجى إدخال رابط الـ API والمفتاح أولاً');
+        return;
+    }
+
+    testConnectionBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الاختبار...';
+    testConnectionBtn.disabled = true;
+
+    try {
+        // محاولة جلب النماذج كاختبار للاتصال
+        const response = await fetch(`${endpoint}/models`, {
+            headers: { 'Authorization': `Bearer ${key}` }
+        });
+
+        if (response.ok) {
+            showToast('✅ تم الاتصال بنجاح!');
+        } else {
+            showToast('❌ فشل الاتصال، تأكد من صحة المفتاح والرابط');
+        }
+    } catch (error) {
+        showToast('❌ حدث خطأ أثناء الاتصال، تحقق من الرابط');
+    } finally {
+        testConnectionBtn.innerHTML = '<i class="fas fa-wifi"></i> اختبار الاتصال';
+        testConnectionBtn.disabled = false;
+    }
+});
+
+// فتح نافذة النماذج
+modelsBtn.addEventListener('click', () => {
+    modelsModal.classList.add('show');
+    loadModels();
+});
+
+// تحديث النماذج
+refreshModelsBtn.addEventListener('click', () => {
+    loadModels();
+});
+
+// جلب النماذج من الـ API
+async function loadModels() {
+    const endpoint = apiEndpoint.value.trim();
+    const key = apiKey.value.trim();
+
+    if (!endpoint || !key) {
+        modelsList.innerHTML = '<p class="empty-msg">يرجى إدخال إعدادات الـ API أولاً من زر الإعدادات.</p>';
+        return;
+    }
+
+    modelsList.innerHTML = '<p class="empty-msg"><i class="fas fa-spinner fa-spin"></i> جاري تحميل النماذج...</p>';
+
+    try {
+        const response = await fetch(`${endpoint}/models`, {
+            headers: { 'Authorization': `Bearer ${key}` }
+        });
+
+        if (!response.ok) throw new Error('فشل جلب النماذج');
+
+        const data = await response.json();
+        const models = data.data || data; // دعم تنسيقات مختلفة
+
+        if (!models || models.length === 0) {
+            modelsList.innerHTML = '<p class="empty-msg">لا توجد نماذج متاحة.</p>';
+            return;
+        }
+
+        modelsList.innerHTML = '';
+        const currentModel = localStorage.getItem('selectedModel') || '';
+
+        models.forEach(model => {
+            const modelId = model.id || model.name;
+            const div = document.createElement('div');
+            div.className = `model-item ${modelId === currentModel ? 'selected' : ''}`;
+            div.innerHTML = `
+                <span class="m-name">${modelId}</span>
+                <i class="fas fa-check m-check"></i>
+            `;
+            div.addEventListener('click', () => {
+                selectModel(modelId);
+            });
+            modelsList.appendChild(div);
+        });
+
+        if (currentModel) {
+            currentModelName.textContent = currentModel;
+        }
+
+    } catch (error) {
+        modelsList.innerHTML = '<p class="empty-msg">حدث خطأ أثناء جلب النماذج. تأكد من صحة الرابط والمفتاح.</p>';
+    }
+}
+
+// اختيار نموذج
+function selectModel(modelId) {
+    localStorage.setItem('selectedModel', modelId);
+    currentModelName.textContent = modelId;
+    showToast(`تم اختيار النموذج: ${modelId}`);
+    modelsModal.classList.remove('show');
+    
+    // تحديث واجهة النماذج
+    document.querySelectorAll('.model-item').forEach(item => {
+        item.classList.remove('selected');
+        if (item.querySelector('.m-name').textContent === modelId) {
+            item.classList.add('selected');
+        }
+    });
+}
+
+// استرجاع النموذج المحدد عند التحميل
+const savedModel = localStorage.getItem('selectedModel');
+if (savedModel) {
+    currentModelName.textContent = savedModel;
+}
+
+// ========== 10. دالة الترجمة الذكية ==========
 async function doTranslate() {
     const text = sourceText.value.trim();
     if (!text) { showToast('اكتب نصاً أولاً'); return; }
@@ -196,42 +326,72 @@ async function doTranslate() {
     statusEl.textContent = 'جاري الترجمة...';
     statusEl.className = 'status';
     translateBtn.disabled = true;
-    
+
     const isAI = aiToggle.checked;
     translateBtn.innerHTML = isAI ? '<i class="fas fa-brain fa-spin"></i> جاري التفكير...' : '<i class="fas fa-spinner fa-spin"></i> جاري الترجمة...';
 
     try {
         let translatedText = "";
-        
-        // محاكاة الذكاء الاصطناعي (تأخير بسيط + تحسين النص)
+
         if (isAI) {
-            await new Promise(r => setTimeout(r, 1500)); // محاكاة وقت التفكير
-        }
+            // الترجمة عبر API الخارجي إذا تم تفعيل الذكاء الاصطناعي
+            const endpoint = localStorage.getItem('apiEndpoint');
+            const key = localStorage.getItem('apiKey');
+            const model = localStorage.getItem('selectedModel');
 
-        const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${from}|${to}`;
-        const response = await fetch(url);
-        const data = await response.json();
+            if (endpoint && key) {
+                // استخدام API مخصص (مثل OpenAI أو غيرها)
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${key}`
+                    },
+                    body: JSON.stringify({
+                        model: model || "gpt-3.5-turbo",
+                        messages: [
+                            { role: "system", content: `You are a professional translator. Translate the following text from ${from} to ${to}. Return only the translation.` },
+                            { role: "user", content: text }
+                        ]
+                    })
+                });
 
-        if (data.responseData && data.responseData.translatedText) {
-            translatedText = data.responseData.translatedText;
-            
-            // إذا كان الذكاء الاصطناعي مفعل، نقوم بتحسين بسيط للنص (محاكاة)
-            if (isAI) {
-                translatedText = translatedText.trim();
-                if (!translatedText.endsWith('.') && !translatedText.endsWith('؟') && !translatedText.endsWith('!')) {
-                    translatedText += '.';
+                const data = await response.json();
+                
+                // استخراج النص بناءً على تنسيق OpenAI
+                if (data.choices && data.choices[0] && data.choices[0].message) {
+                    translatedText = data.choices[0].message.content;
+                } else {
+                    throw new Error('تنسيق رد غير متوقع');
                 }
+            } else {
+                // إذا لم يتم إعداد API، نستخدم الترجمة المجانية مع تأخير
+                await new Promise(r => setTimeout(r, 1000));
+                const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${from}|${to}`;
+                const response = await fetch(url);
+                const data = await response.json();
+                translatedText = data.responseData.translatedText;
             }
-            
-            targetText.value = translatedText;
-            statusEl.textContent = isAI ? 'تمت الترجمة الذكية' : 'تمت الترجمة';
-            statusEl.classList.add('success');
-            saveToHistory(text, translatedText, from, to);
         } else {
-            throw new Error('فشل');
+            // الترجمة العادية (MyMemory)
+            const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${from}|${to}`;
+            const response = await fetch(url);
+            const data = await response.json();
+            if (data.responseData && data.responseData.translatedText) {
+                translatedText = data.responseData.translatedText;
+            } else {
+                throw new Error('فشل');
+            }
         }
+
+        targetText.value = translatedText.trim();
+        statusEl.textContent = isAI ? 'تمت الترجمة الذكية' : 'تمت الترجمة';
+        statusEl.classList.add('success');
+        saveToHistory(text, translatedText.trim(), from, to);
+
     } catch (error) {
-        statusEl.textContent = 'حدث خطأ';
+        console.error(error);
+        statusEl.textContent = 'حدث خطأ (تحقق من إعدادات API)';
         statusEl.classList.add('error');
     } finally {
         translateBtn.disabled = false;
@@ -240,11 +400,11 @@ async function doTranslate() {
 }
 translateBtn.addEventListener('click', doTranslate);
 
-// 10. سجل الترجمات
+// ========== 11. سجل الترجمات ==========
 function saveToHistory(src, tgt, from, to) {
     let history = JSON.parse(localStorage.getItem('translationHistory')) || [];
     history.unshift({ src, tgt, from, to, date: new Date().toLocaleString('ar-EG') });
-    if (history.length > 20) history.pop(); // نحتفظ بآخر 20 ترجمة فقط
+    if (history.length > 20) history.pop();
     localStorage.setItem('translationHistory', JSON.stringify(history));
     renderHistory();
 }
@@ -264,7 +424,7 @@ function renderHistory() {
     `).join('');
 }
 
-function loadHistoryItem(index) {
+window.loadHistoryItem = function(index) {
     const history = JSON.parse(localStorage.getItem('translationHistory')) || [];
     const item = history[index];
     if (item) {
@@ -276,49 +436,50 @@ function loadHistoryItem(index) {
     }
 }
 
-// مسح السجل
 clearHistoryBtn.addEventListener('click', () => {
     localStorage.removeItem('translationHistory');
     renderHistory();
     showToast('تم مسح السجل');
 });
 
-// فتح وإغلاق النوافذ
+// ========== 12. فتح وإغلاق النوافذ ==========
 historyBtn.addEventListener('click', () => { renderHistory(); historyModal.classList.add('show'); });
 settingsBtn.addEventListener('click', () => settingsModal.classList.add('show'));
+
 closeBtns.forEach(btn => {
     btn.addEventListener('click', () => {
         historyModal.classList.remove('show');
         settingsModal.classList.remove('show');
+        modelsModal.classList.remove('show');
     });
 });
-// إغلاق عند النقر خارج النافذة
+
 window.addEventListener('click', (e) => {
     if (e.target === historyModal) historyModal.classList.remove('show');
     if (e.target === settingsModal) settingsModal.classList.remove('show');
+    if (e.target === modelsModal) modelsModal.classList.remove('show');
 });
 
-// 11. وضع تجربة المستخدم (UX Mode)
+// ========== 13. وضع تجربة المستخدم ==========
 const uxMode = localStorage.getItem('uxMode') === 'true';
 uxModeToggle.checked = uxMode;
 
 uxModeToggle.addEventListener('change', () => {
     localStorage.setItem('uxMode', uxModeToggle.checked);
     if (uxModeToggle.checked) {
-        showToast('تم تفعيل وضع تجربة المستخدم: مرحباً بك! جرب الترجمة الصوتية أو الذكاء الاصطناعي.');
+        showToast('تم تفعيل وضع تجربة المستخدم!');
     } else {
         showToast('تم إيقاف وضع تجربة المستخدم.');
     }
 });
 
-// إظهار رسالة ترحيبية إذا كان الوضع مفعل
 if (uxMode) {
     setTimeout(() => {
-        showToast('👋 مرحباً بك في LinguaAI! جرب تفعيل "الترجمة الذكية" للحصول على نتائج أفضل.');
+        showToast('👋 مرحباً بك! يمكنك الآن إعداد API من زر الإعدادات (الثلاث نقاط).');
     }, 1500);
 }
 
-// 12. الإشعارات
+// ========== 14. الإشعارات ==========
 let toastTimer;
 function showToast(msg) {
     toast.textContent = msg;
