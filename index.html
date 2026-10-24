@@ -29,10 +29,10 @@
                         <div class="color-circle" data-color="orange" style="background: #f59e0b;"></div>
                     </div>
                 </div>
-                <!-- زر الإعدادات -->
-                <button class="theme-btn" id="settingsBtn" title="الإعدادات"><i class="fas fa-cog"></i></button>
                 <!-- زر الوضع الليلي -->
                 <button class="theme-btn" id="themeToggle" title="الوضع الليلي"><i class="fas fa-moon"></i></button>
+                <!-- زر الإعدادات (ثلاث نقاط) -->
+                <button class="theme-btn" id="settingsBtn" title="الإعدادات"><i class="fas fa-ellipsis-v"></i></button>
             </div>
         </div>
     </nav>
@@ -104,7 +104,9 @@
                     <input type="checkbox" id="aiToggle">
                     <span class="slider round"></span>
                 </label>
-                <span class="ai-label"><i class="fas fa-brain"></i> تفعيل الترجمة بالذكاء الاصطناعي (أبطأ ولكن أدق)</span>
+                <span class="ai-label"><i class="fas fa-brain"></i> تفعيل الترجمة بالذكاء الاصطناعي</span>
+                <!-- زر عرض النماذج -->
+                <button class="model-btn" id="modelsBtn"><i class="fas fa-robot"></i> النماذج</button>
             </div>
 
             <!-- أزرار التحكم الرئيسية -->
@@ -136,7 +138,7 @@
         </div>
     </div>
 
-    <!-- نافذة الإعدادات -->
+    <!-- نافذة الإعدادات (ثلاث نقاط) -->
     <div class="modal" id="settingsModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -145,13 +147,34 @@
             </div>
             <div class="modal-body">
                 <div class="setting-item">
-                    <strong>إصدار الموقع:</strong>
-                    <span>v2.1.0</span>
+                    <strong>إصدار الموقع:</strong> <span>v3.0.0</span>
                 </div>
                 <div class="setting-item">
-                    <strong>نوع النسخة:</strong>
-                    <span class="badge">مجانية (Free)</span>
+                    <strong>نوع النسخة:</strong> <span class="badge">مجانية (Free)</span>
                 </div>
+                
+                <hr style="margin: 15px 0; border: 0; border-top: 1px solid var(--border);">
+                <h4 style="margin-bottom: 10px; color: var(--primary);"><i class="fas fa-plug"></i> إعدادات API للذكاء الاصطناعي</h4>
+                
+                <div class="input-group">
+                    <label>رابط الـ API (Endpoint):</label>
+                    <input type="text" id="apiEndpoint" placeholder="https://api.openai.com/v1/chat/completions" value="https://api.openai.com/v1/chat/completions">
+                </div>
+                
+                <div class="input-group">
+                    <label>مفتاح الـ API (API Key):</label>
+                    <div class="key-input-wrapper">
+                        <input type="password" id="apiKey" placeholder="sk-...">
+                        <button class="icon-btn" id="pasteKeyBtn" title="لصق المفتاح"><i class="fas fa-paste"></i></button>
+                    </div>
+                </div>
+
+                <button class="main-btn" id="testConnectionBtn" style="padding: 10px; font-size: 0.9rem; margin-top: 10px;">
+                    <i class="fas fa-wifi"></i> اختبار الاتصال
+                </button>
+
+                <hr style="margin: 15px 0; border: 0; border-top: 1px solid var(--border);">
+                
                 <div class="setting-item">
                     <strong>وضع تجربة المستخدم (UX Mode):</strong>
                     <label class="switch small">
@@ -159,7 +182,27 @@
                         <span class="slider round"></span>
                     </label>
                 </div>
-                <p class="setting-desc">عند تفعيل وضع تجربة المستخدم، ستظهر إشعارات ترحيبية وتلميحات تساعدك على استخدام الموقع.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة النماذج -->
+    <div class="modal" id="modelsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-robot"></i> النماذج المتاحة</h3>
+                <div>
+                    <button class="icon-btn" id="refreshModelsBtn" title="تحديث النماذج"><i class="fas fa-sync"></i></button>
+                    <button class="icon-btn close-btn"><i class="fas fa-times"></i></button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 15px;">
+                    النموذج المحدد حالياً: <strong id="currentModelName">افتراضي</strong>
+                </p>
+                <div id="modelsList" class="models-list">
+                    <p class="empty-msg">جاري تحميل النماذج...</p>
+                </div>
             </div>
         </div>
     </div>
